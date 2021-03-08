@@ -1,8 +1,19 @@
 {
   "conversionApi": {
-    "protocol": "http",
-    "host": "data.fixer.io",
-    "port": 80,
+    "environments": [
+      {
+        "name": "dev",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      },
+      {
+        "name": "ci",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      }
+    ],
     "scenarios": [
       {
         "scenarioNumber": 1,
@@ -25,9 +36,20 @@
     ]
   },
   "customerApi": {
-    "protocol": "http",
-    "host": "127.0.0.1",
-    "port": 8080,
+    "environments": [
+      {
+        "name": "dev",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      },
+      {
+        "name": "ci",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      }
+    ],
     "scenarios": [
       {
         "scenarioNumber": 1,
@@ -46,8 +68,8 @@
           "path2": "value2"
         },
         "queryParams": {
-          "name1": "value1",
-          "name2": "value2"
+          "qname1": "qvalue1",
+          "qname2": "qvalue2"
         },
         "hasRequestBody": "true",
         "hasResponseBody": "true",

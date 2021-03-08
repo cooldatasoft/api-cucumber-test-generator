@@ -1,9 +1,9 @@
 
-Feature: $apiSescription
+Feature: $api.description
 
 #set( $underscore = "_" )
 
-#foreach($scenario in $scenarios)
+#foreach($scenario in $api.scenarios)
 
 #set ($headersMap = $scenario.headers)
 #set ($pathParamsMap = $scenario.pathParams)

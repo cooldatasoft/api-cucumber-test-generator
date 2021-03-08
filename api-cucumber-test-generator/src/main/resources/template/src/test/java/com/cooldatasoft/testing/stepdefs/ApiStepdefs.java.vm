@@ -6,6 +6,7 @@ import com.cooldatasoft.testing.data.Api;
 import com.cooldatasoft.testing.data.Scenario;
 import com.cooldatasoft.testing.data.TestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -15,6 +16,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;

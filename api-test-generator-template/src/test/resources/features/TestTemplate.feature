@@ -20,34 +20,34 @@ Feature: some description
 
 #    ********************************
 
-Feature: $apiSescription
-
-#set( $underscore = "_" )
-
-#foreach($scenario in $scenarios)
-
-#set ($headersMap = $scenario.headers)
-#set ($pathParamsMap = $scenario.pathParams)
-#set ($queryParamsMap = $scenario.queryParams)
-
-  @$apiName
-  @$scenario.groupName
-  @$apiName$underscore$scenario.scenarioNumber
-  Scenario: $scenario.description
-    Given "$apiName" is up and running
-    And I prepare scenario number "$scenario.scenarioNumber" in group "$scenario.groupName"
-  #foreach ($mapEntry in $headersMap.entrySet())
-    And request has header with name "$mapEntry.key" and value "$mapEntry.value"
-  #end
-  #foreach ($mapEntry in $pathParamsMap.entrySet())
-    And path param "$mapEntry.key" has value "$mapEntry.value"
-  #end
-  #foreach ($mapEntry in $queryParamsMap.entrySet())
-    And has a query param with name "$mapEntry.key" and value "$mapEntry.value"
-  #end
-    And endpoint consumes "$scenario.consumes"
-    And endpoint produces "$scenario.produces"
-    When I make a "$scenario.requestMethod" request to path "$scenario.contextPath"
-    Then I should get a response with http status code "$scenario.responseStatus"
-#end
+#Feature: $apiSescription
+#
+##set( $underscore = "_" )
+#
+##foreach($scenario in $scenarios)
+#
+##set ($headersMap = $scenario.headers)
+##set ($pathParamsMap = $scenario.pathParams)
+##set ($queryParamsMap = $scenario.queryParams)
+#
+#  @$apiName
+#  @$scenario.groupName
+#  @$apiName$underscore$scenario.scenarioNumber
+#  Scenario: $scenario.description
+#    Given "$apiName" is up and running
+#    And I prepare scenario number "$scenario.scenarioNumber" in group "$scenario.groupName"
+#  #foreach ($mapEntry in $headersMap.entrySet())
+#    And request has header with name "$mapEntry.key" and value "$mapEntry.value"
+#  #end
+#  #foreach ($mapEntry in $pathParamsMap.entrySet())
+#    And path param "$mapEntry.key" has value "$mapEntry.value"
+#  #end
+#  #foreach ($mapEntry in $queryParamsMap.entrySet())
+#    And has a query param with name "$mapEntry.key" and value "$mapEntry.value"
+#  #end
+#    And endpoint consumes "$scenario.consumes"
+#    And endpoint produces "$scenario.produces"
+#    When I make a "$scenario.requestMethod" request to path "$scenario.contextPath"
+#    Then I should get a response with http status code "$scenario.responseStatus"
+##end
 

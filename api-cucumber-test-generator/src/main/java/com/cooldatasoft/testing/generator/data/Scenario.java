@@ -1,4 +1,4 @@
-package com.hsbc.generator;
+package com.cooldatasoft.testing.generator.data;
 
 import lombok.Data;
 

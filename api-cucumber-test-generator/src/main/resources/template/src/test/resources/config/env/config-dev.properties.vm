@@ -1,0 +1,3 @@
+#foreach($environment in $api.environments)
+
+#end
