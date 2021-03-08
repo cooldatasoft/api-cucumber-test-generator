@@ -135,7 +135,7 @@ public abstract class BaseStepdefs {
     protected final void thenVerifyResponseBody() {
         try {
             if (getHasResponseBody()) {
-                String expectedResponse = IOUtils.resourceToString("/config/scenario/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+                String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
                 JSONAssert.assertEquals(expectedResponse, response.asString(), false);
             }
         } catch (Exception e) {
@@ -147,7 +147,7 @@ public abstract class BaseStepdefs {
         if (getHasRequestBody()) {
             String requestBody = null;
             try {
-                requestBody = IOUtils.resourceToString("/config/scenario/request/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+                requestBody = IOUtils.resourceToString("/config/request/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
                 setRequestBody(requestBody);
                 return requestBody;
             } catch (Exception e) {
@@ -159,7 +159,7 @@ public abstract class BaseStepdefs {
 
     protected final void thenVerifyPartOfResponse(JSONObject jsonObject) {
         try {
-            String expectedResponse = IOUtils.resourceToString("/config/scenario/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+            String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
             JSONAssert.assertEquals(expectedResponse, jsonObject.toString(), false);
         } catch (Exception e) {
             throw new RuntimeException(e);

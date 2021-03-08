@@ -68,8 +68,8 @@
           "path2": "value2"
         },
         "queryParams": {
-          "name1": "value1",
-          "name2": "value2"
+          "qname1": "qvalue1",
+          "qname2": "qvalue2"
         },
         "hasRequestBody": "true",
         "hasResponseBody": "true",

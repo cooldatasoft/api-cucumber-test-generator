@@ -73,7 +73,7 @@ public class ApiStepdefs extends BaseStepdefs {
 
     @And("^has a query param with name \"([^\"]*)\" and value \"([^\"]*)\"$")
     public void hasAQueryParamWithNameAndValue(String queryParamName, String queryParamValue) {
-        getPathParams().put(queryParamName, queryParamValue);
+        getQueryParams().put(queryParamName, queryParamValue);
     }
 
     @And("^endpoint consumes \"([^\"]*)\"$")
