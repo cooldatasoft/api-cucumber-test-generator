@@ -1,5 +1,6 @@
 {
   "conversionApi": {
+    "description": "Conversion API",
     "environments": [
       {
         "name": "dev",
@@ -36,6 +37,7 @@
     ]
   },
   "customerApi": {
+    "description": "Customer API",
     "environments": [
       {
         "name": "dev",
