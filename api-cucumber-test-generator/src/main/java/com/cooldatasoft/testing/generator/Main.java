@@ -21,12 +21,11 @@ import static com.cooldatasoft.testing.generator.Constants.*;
 
 public class Main {
 
-
     public static void main(String[] args) throws IOException, URISyntaxException {
         new Main().start();
     }
 
-    private void start() throws IOException, URISyntaxException {
+    private void start() throws IOException {
 
 
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/base").mkdirs();
@@ -70,7 +69,7 @@ public class Main {
 
 
         ObjectMapper objectMapper = new ObjectMapper();
-        String testConfigJsonStr = IOUtils.resourceToString("/input.json", StandardCharsets.UTF_8);
+        String testConfigJsonStr = IOUtils.resourceToString(INPUT_TESTS_FILE, StandardCharsets.UTF_8);
         TestConfig testConfig = objectMapper.readValue(testConfigJsonStr, TestConfig.class);
 
 
@@ -132,10 +131,6 @@ public class Main {
                 "src/main/resources/template/src/test/java/com/cooldatasoft/testing/runner/RunCukeIT.java.vm");
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs/ApiStepdefs.java",
                 "src/main/resources/template/src/test/java/com/cooldatasoft/testing/stepdefs/ApiStepdefs.java.vm");
-
-
-//        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-dev.properties",
-//                "src/main/resources/template/src/test/resources/config/env/config-dev.properties.vm");
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
