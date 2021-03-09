@@ -90,7 +90,19 @@ public class Main {
                     e.printStackTrace();
                 }
             });
-            //FIXME create empty request & response json files
+
+            api.getEnvironments().forEach( environment -> {
+                try {
+                    VelocityContext contextForEnv = new VelocityContext();
+                    contextForEnv.put("apiName", apiName);
+                    contextForEnv.put("environment", environment);
+
+                    createFile(velocityEngine, contextForEnv, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-"+environment.getName()+".properties",
+                            "src/main/resources/template/src/test/resources/config/env/config.properties.vm", true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         });
 //        String currentDir = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
         FileUtils.copyFile(new File("src/main/resources/input.json"), new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/test-config.json"));
@@ -125,8 +137,12 @@ public class Main {
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
+        createFile(velocityEngine, context, outputFile, template, false);
+    }
+
+    public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template, boolean append) throws IOException {
         Template t = velocityEngine.getTemplate(template);
-        Writer writer = new FileWriter(new File(outputFile));
+        Writer writer = new FileWriter(outputFile, append);
         t.merge(context, writer);
         writer.flush();
         writer.close();

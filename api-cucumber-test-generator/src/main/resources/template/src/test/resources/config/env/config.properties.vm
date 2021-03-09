@@ -1,0 +1,6 @@
+#set( $dot = "." )
+
+
+${apiName}${dot}protocol=$environment.protocol
+${apiName}${dot}host=$environment.host
+${apiName}${dot}port=$environment.port
