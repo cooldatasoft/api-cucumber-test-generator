@@ -39,7 +39,7 @@ public class Main {
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response").mkdirs();
 
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-default.properties").createNewFile();
+//        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-default.properties").createNewFile();
 
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.init();

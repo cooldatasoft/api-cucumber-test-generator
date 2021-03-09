@@ -46,9 +46,8 @@ public abstract class BaseStepdefs {
 
     protected final void init() {
         this.env = System.getProperty("env");
-        if (this.env == null) {
-            log.warn("Setting environemnt to default!");
-            this.env = "default";
+        if (this.env == null || this.env.trim().length() == 0) {
+            throw new RuntimeException("Environment name not provided as jvm paramater");
         }
     }
 
