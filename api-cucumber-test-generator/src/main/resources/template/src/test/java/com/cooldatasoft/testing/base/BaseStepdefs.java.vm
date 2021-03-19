@@ -1,5 +1,10 @@
 package com.cooldatasoft.testing.base;
 
+import com.cooldatasoft.testing.config.Config;
+import com.cooldatasoft.testing.data.Api;
+import com.cooldatasoft.testing.data.Scenario;
+import com.cooldatasoft.testing.data.TestConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -14,9 +19,14 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+/**
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
 
 @Data
 @Slf4j
@@ -39,6 +49,7 @@ public abstract class BaseStepdefs {
     private String contextPath = "";
     private Method requestMethod;
     private ContentType contentType;
+    private String produces;
     private String requestBody;
     private Boolean hasRequestBody;
     private Boolean hasResponseBody;
@@ -51,11 +62,118 @@ public abstract class BaseStepdefs {
         }
     }
 
-    /**
-     * Do not remove the final from method. This method should not be overriden in child classes to make sure the whole
-     * framework works as expected.
-     */
-    protected final void whenRequestIsExecuted() {
+    protected final void thenVerifyResponseCode(int code) {
+        assertThat(getResponse().getStatusCode(), is(code));
+    }
+
+    protected final void thenVerifyResponseContentType(String produces) {
+        assertThat(getResponse().getContentType(), is(produces));
+    }
+
+    protected final void thenVerifyResponseBody() {
+        try {
+            if (getHasResponseBody()) {
+                String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+                JSONAssert.assertEquals(expectedResponse, response.asString(), false);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected String readAndSetRequestBodyFromFile() {
+        if (getHasRequestBody()) {
+            String requestBody;
+            try {
+                requestBody = IOUtils.resourceToString("/config/request/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+                setRequestBody(requestBody);
+                return requestBody;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+    protected final void thenVerifyPartOfResponse(JSONObject jsonObject) {
+        try {
+            String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+            JSONAssert.assertEquals(expectedResponse, jsonObject.toString(), false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void isUpAndRunning(String apiName) {
+
+        String protocol = Config.getConfig(getEnv()).getProperty(apiName + ".protocol");
+        String host = Config.getConfig(getEnv()).getProperty(apiName + ".host");
+        String port = Config.getConfig(getEnv()).getProperty(apiName + ".port");
+
+        setApiName(apiName);
+        setProtocol(protocol);
+        setHost(host);
+        setPort(Integer.parseInt(port));
+    }
+
+    protected void isUpAndRunningAtOnPortOverProtocol(String apiName, String host, int port, String protocol){
+        setApiName(apiName);
+        setProtocol(protocol);
+        setHost(host);
+        setPort(port);
+    }
+
+    public void iPrepareScenarioNumberInGroup(int scenarioNumebr, String groupName) {
+        setScenarioNumber(scenarioNumebr);
+        setGroupName(groupName);
+    }
+
+    public void requestHasHeaderWithNameAndValue(String headerName, String headerValue) {
+        getHeaders().put(headerName, headerValue);
+    }
+
+    public void pathParamHasValue(String pathParamName, String pathParamValue) {
+        getPathParams().put(pathParamName, pathParamValue);
+    }
+
+    public void hasAQueryParamWithNameAndValue(String queryParamName, String queryParamValue) {
+        getQueryParams().put(queryParamName, queryParamValue);
+    }
+
+    public void endpointConsumes(String consumes) {
+        setContentType(ContentType.fromContentType(consumes));
+    }
+
+    public void endpointProduces(String produces) {
+        setProduces(produces);
+    }
+
+    public void iMakeARequestToPath(String requestMethod, String contextPath) throws Throwable {
+        setContextPath(contextPath);
+        setRequestMethod(Method.valueOf(requestMethod));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String testCasesStr = IOUtils.resourceToString("/config/test-config.json", StandardCharsets.UTF_8);
+        TestConfig apiTestConfig = objectMapper.readValue(testCasesStr, TestConfig.class);
+
+        if (apiTestConfig.containsKey(getApiName())) {
+            Api api = apiTestConfig.get(getApiName());
+
+            Optional<Scenario> optionalScenario = api.getScenarios().stream()
+                    .filter(scenario -> scenario.getScenarioNumber() == getScenarioNumber())
+                    .findFirst();
+
+            Scenario scenario = optionalScenario.orElseThrow(() -> new RuntimeException("Invalid Scenario Number : " + getApiName() + " " + getScenarioNumber()));
+            setScenarioDescription(scenario.getDescription());
+
+            setHasRequestBody(scenario.getHasRequestBody());
+            setHasResponseBody(scenario.getHasResponseBody());
+
+        } else {
+            throw new RuntimeException("Invalid Api name : " + getApiName());
+        }
+
 
         assertThat(getApiName(), is(notNullValue()));
         assertThat(getProtocol(), is(notNullValue()));
@@ -115,54 +233,9 @@ public abstract class BaseStepdefs {
         log.info("*****************************************************************************************");
     }
 
-    /**
-     * Do not remove the final from method. This method should not be overriden in child classes to make sure the whole
-     * framework works as expected.
-     */
-    protected final void thenVerifyResponseCode(int code) {
-        assertThat(getResponse().getStatusCode(), is(code));
+    public void iShouldGetAResponseWithHttpStatusCode(int responseStatus) {
+        thenVerifyResponseCode(responseStatus);
+        thenVerifyResponseBody();
+        thenVerifyResponseContentType(getProduces());
     }
-
-    protected final void thenVerifyResponseContentType(String contentType) {
-        assertThat(getResponse().getContentType(), is(contentType));
-    }
-
-    /**
-     * Do not remove the final from method. This method should not be overriden in child classes to make sure the whole
-     * framework works as expected.
-     */
-    protected final void thenVerifyResponseBody() {
-        try {
-            if (getHasResponseBody()) {
-                String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-                JSONAssert.assertEquals(expectedResponse, response.asString(), false);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected String readAndSetRequestBodyFromFile() {
-        if (getHasRequestBody()) {
-            String requestBody = null;
-            try {
-                requestBody = IOUtils.resourceToString("/config/request/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-                setRequestBody(requestBody);
-                return requestBody;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return null;
-    }
-
-    protected final void thenVerifyPartOfResponse(JSONObject jsonObject) {
-        try {
-            String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-            JSONAssert.assertEquals(expectedResponse, jsonObject.toString(), false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }
