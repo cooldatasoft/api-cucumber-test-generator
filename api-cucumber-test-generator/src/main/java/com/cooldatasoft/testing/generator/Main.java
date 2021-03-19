@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,20 +85,42 @@ public class Main {
 
             api.getScenarios().forEach(scenario -> {
                 try {
-                    new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName +scenario.getScenarioNumber() +".json").createNewFile();
-                    new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName +scenario.getScenarioNumber() +".json").createNewFile();
+                    if (scenario.getConsumes().contains("json")) {
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenario.getScenarioNumber() + ".json"),
+                                "Place your request body here".getBytes());
+                    } else if (scenario.getConsumes().contains("xml")) {
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenario.getScenarioNumber() + ".xml"),
+                                "Place your request body here".getBytes());
+                    } else {
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenario.getScenarioNumber() + ".txt"),
+                                "Place your request body here".getBytes());
+                    }
+
+
+                    if (scenario.getProduces().contains("json")) {
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenario.getScenarioNumber() + ".json"),
+                                "Place your response body here".getBytes());
+                    } else if (scenario.getProduces().contains("xml")) {
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenario.getScenarioNumber() + ".xml"),
+                                "Place your response body here".getBytes());
+                    } else {
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenario.getScenarioNumber() + ".txt"),
+                                "Place your response body here".getBytes());
+                    }
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
 
-            api.getEnvironments().forEach( environment -> {
+            api.getEnvironments().forEach(environment -> {
                 try {
                     VelocityContext contextForEnv = new VelocityContext();
                     contextForEnv.put("apiName", apiName);
                     contextForEnv.put("environment", environment);
 
-                    createFile(velocityEngine, contextForEnv, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-"+environment.getName()+".properties",
+                    createFile(velocityEngine, contextForEnv, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties",
                             "src/main/resources/template/src/test/resources/config/env/config.properties.vm", true);
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -4,5 +4,4 @@
 
 
 * update package
-* put comment in json request/response
-* 
+* request/response files depending on consumes/produces 
