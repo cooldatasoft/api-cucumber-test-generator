@@ -1,9 +1,9 @@
-package com.cooldatasoft.testing.base;
+package $basePackage.base;
 
-import com.cooldatasoft.testing.config.Config;
-import com.cooldatasoft.testing.data.Api;
-import com.cooldatasoft.testing.data.Scenario;
-import com.cooldatasoft.testing.data.TestConfig;
+import $basePackage.config.Config;
+import $basePackage.data.Api;
+import $basePackage.data.Scenario;
+import $basePackage.data.TestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
