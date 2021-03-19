@@ -129,6 +129,8 @@ public class Main {
                 "src/main/resources/template/src/test/java/com/cooldatasoft/testing/runner/RunCukeIT.java.vm");
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs/core/ApiStepdefs.java",
                 "src/main/resources/template/src/test/java/com/cooldatasoft/testing/stepdefs/core/ApiStepdefs.java.vm");
+        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs/TemplateStepdefs.java",
+                "src/main/resources/template/src/test/java/com/cooldatasoft/testing/stepdefs/TemplateStepdefs.java.vm");
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
