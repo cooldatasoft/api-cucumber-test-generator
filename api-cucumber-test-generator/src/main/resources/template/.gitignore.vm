@@ -23,8 +23,9 @@
 hs_err_pid*
 
 
-_deneme/
-test output/
+test-output/
 .idea/
 target/
 *.iml
+.project/
+.classpath
