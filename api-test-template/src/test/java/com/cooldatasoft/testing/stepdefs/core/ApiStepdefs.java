@@ -1,5 +1,6 @@
-package com.cooldatasoft.testing.stepdefs;
+package com.cooldatasoft.testing.stepdefs.core;
 
+import com.cooldatasoft.testing.stepdefs.TemplateStepdefs;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

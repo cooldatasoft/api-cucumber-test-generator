@@ -32,7 +32,7 @@ public class Main {
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/config").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/data").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/runner").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs/core").mkdirs();
 
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env").mkdirs();
@@ -127,8 +127,8 @@ public class Main {
 
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/runner/RunCukeIT.java",
                 "src/main/resources/template/src/test/java/com/cooldatasoft/testing/runner/RunCukeIT.java.vm");
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs/ApiStepdefs.java",
-                "src/main/resources/template/src/test/java/com/cooldatasoft/testing/stepdefs/ApiStepdefs.java.vm");
+        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/com/cooldatasoft/testing/stepdefs/core/ApiStepdefs.java",
+                "src/main/resources/template/src/test/java/com/cooldatasoft/testing/stepdefs/core/ApiStepdefs.java.vm");
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
