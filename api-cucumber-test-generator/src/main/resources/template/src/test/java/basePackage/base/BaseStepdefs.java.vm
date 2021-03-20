@@ -58,7 +58,9 @@ public abstract class BaseStepdefs {
     protected final void init() {
         this.env = System.getProperty("env");
         if (this.env == null || this.env.trim().length() == 0) {
-            throw new RuntimeException("Environment name not provided as paramater. eg. -Denv=dev");
+            this.env= "dev";
+            log.warn("No env provided, using default as \"dev\". eg. -Denv=staging");
+            //throw new RuntimeException("Environment name not provided as paramater. eg. -Denv=dev");
         }
     }
 
@@ -67,7 +69,7 @@ public abstract class BaseStepdefs {
     }
 
     protected final void thenVerifyResponseContentType(String produces) {
-        assertThat(getResponse().getContentType(), is(produces));
+        assertThat(getResponse().getContentType(), containsString(produces));
     }
 
     protected final void thenVerifyResponseBody() {

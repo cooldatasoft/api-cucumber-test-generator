@@ -15,7 +15,9 @@ import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.cooldatasoft.testing.generator.Constants.*;
@@ -57,8 +59,8 @@ public class Main {
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/.gitignore", "src/main/resources/template/.gitignore.vm");
 
 
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/pdf-config1.yaml",
-                "src/main/resources/template/src/test/resources/pdf-config1.yaml.vm");
+        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/pdf-config.yaml",
+                "src/main/resources/template/src/test/resources/pdf-config.yaml.vm");
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/logback.xml",
                 "src/main/resources/template/src/test/resources/logback.xml.vm");
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/klov.properties",
@@ -74,17 +76,23 @@ public class Main {
         TestConfig testConfig = objectMapper.readValue(testConfigJsonStr, TestConfig.class);
 
 
+        List<String> runners = new ArrayList<>();
+        testConfig.forEach((apiName, api) -> {
+            api.getScenarios().forEach(scenario -> {
+                String runnerName = WordUtils.capitalize(apiName) + scenario.getScenarioNumber();
+                runners.add(runnerName);
+            });
+        });
+        velocityContext.put("runners", runners);
+        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/testng.xml",
+                "src/main/resources/template/testng.xml.vm");
+
+
         testConfig.forEach((apiName, api) -> {
             velocityContext.put("apiName", apiName);
             velocityContext.put("capitalizedApiName", WordUtils.capitalize(apiName));
             velocityContext.put("api", api);
-            try {
-                createFile(velocityEngine, velocityContext,
-                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/" + apiName + ".feature",
-                        "src/main/resources/template/src/test/resources/features/TestTemplate.feature.vm");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
 
             api.getScenarios().forEach(scenario -> {
 
@@ -93,26 +101,50 @@ public class Main {
                 String produces = scenario.getProduces();
 
                 try {
-                    if (consumes.contains("json")) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".json"),
-                                "Place your request body here".getBytes());
-                    } else if (consumes.contains("xml")) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".xml"),
-                                "Place your request body here".getBytes());
-                    } else {
+                    velocityContext.put("scenario", scenario);
+                    createFile(velocityEngine, velocityContext,
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/" + apiName + scenarioNumber + ".feature",
+                            "src/main/resources/template/src/test/resources/features/TestTemplate.feature.vm");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
+                    if (consumes.contains("json") && scenario.getHasRequestBody()) {
+                        if (!new File(requestFile + ".json").exists()) {
+                            Files.write(Paths.get(requestFile + ".json"),
+                                    "{\n\t\"message\":\"Place your request body here\"\n}".getBytes());
+                        }
+                    } else if (consumes.contains("xml") && scenario.getHasRequestBody()) {
+                        if (!new File(requestFile + ".xml").exists()) {
+                            Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".xml"),
+                                    "<xml>\n\t<value>Place your request body here</value>\n</xml>".getBytes());
+                        }
+                    } else if (!new File(requestFile + ".txt").exists() && scenario.getHasRequestBody()) {
                         Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".txt"),
                                 "Place your request body here".getBytes());
+                    } else if (scenario.getHasRequestBody()) {
+                        System.err.println("Unknown consumes : " + consumes);
                     }
 
-                    if (produces.contains("json")) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber + ".json"),
-                                "Place your response body here".getBytes());
-                    } else if (produces.contains("xml")) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber + ".xml"),
-                                "Place your response body here".getBytes());
-                    } else {
+
+                    String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
+                    if (produces.contains("json") && scenario.getHasResponseBody()) {
+                        if (!new File(responseFile + ".json").exists()) {
+                            Files.write(Paths.get(responseFile + ".json"),
+                                    "{\n\t\"message\":\"Place your response body here\"\n}".getBytes());
+                        }
+                    } else if (produces.contains("xml") && scenario.getHasResponseBody()) {
+                        if (!new File(responseFile + ".xml").exists()) {
+                            Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber + ".xml"),
+                                    "<xml>\n\t<value>Place your response body here</value>\n</xml>".getBytes());
+                        }
+                    } else if (!new File(responseFile + ".txt").exists() && scenario.getHasResponseBody()) {
                         Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber + ".txt"),
                                 "Place your response body here".getBytes());
+                    } else if (scenario.getHasResponseBody()) {
+                        System.err.println("Unknown produces : " + produces);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -121,7 +153,7 @@ public class Main {
                 try {
                     velocityContext.put("scenarioNumber", scenarioNumber);
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/"+apiName+scenarioNumber+"/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/" + apiName + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/core/ApiStepdefs.java.vm");
 
                     //Do not override this file if exists
@@ -132,7 +164,7 @@ public class Main {
                     }
 
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/runner/RunCukeIT"+ WordUtils.capitalize(apiName) + scenarioNumber +".java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/runner/RunCukeIT" + WordUtils.capitalize(apiName) + scenarioNumber + ".java",
                             "src/main/resources/template/src/test/java/basePackage/runner/RunCukeIT.java.vm");
 
                 } catch (IOException e) {
@@ -194,7 +226,7 @@ public class Main {
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template, boolean append) throws IOException {
 
         File file = new File(outputFile);
-        if(!file.exists()){
+        if (!file.exists()) {
             file = file.getParentFile();
             Files.createDirectories(Paths.get(file.getAbsolutePath()));
         }

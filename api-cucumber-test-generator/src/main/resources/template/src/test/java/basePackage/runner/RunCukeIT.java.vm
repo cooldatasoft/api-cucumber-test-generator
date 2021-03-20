@@ -1,19 +1,19 @@
 package ${basePackage}.runner;
 
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
 
-@RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {
-                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
-                "summary"
+                "pretty",
+                "html:target/cucumber",
+                "json:target/cucumber-report/${apiName}${scenarioNumber}.json",
+                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter: target/report.html"
         }
-        , glue = "${basePackage}.core.${apiName}${scenarioNumber}"
-        , features = "classpath:features/"
-        , publish = false
+        , glue = "${basePackage}.stepdefs.core.${apiName}${scenarioNumber}"
+        , features = "src/test/resources/features/${apiName}${scenarioNumber}.feature"
+        , monochrome = true
 )
-public class RunCukeIT${capitalizedApiName}${scenarioNumber} {
+public class RunCukeIT${capitalizedApiName}${scenarioNumber} extends AbstractTestNGCucumberTests {
 
 }

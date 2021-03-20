@@ -7,7 +7,7 @@ import com.cooldatasoft.testing.base.BaseStepdefs;
  *
  * Create one class per API along with ApiStepdefs class
  */
-public class TemplateStepdefs extends BaseStepdefs {
+public class Template2Stepdefs extends BaseStepdefs {
 
     protected void beforeInit(){
 

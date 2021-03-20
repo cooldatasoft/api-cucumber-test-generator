@@ -1,6 +1,6 @@
-package com.cooldatasoft.testing.stepdefs.core;
+package com.cooldatasoft.testing.stepdefs.core.scenario1;
 
-import com.cooldatasoft.testing.stepdefs.TemplateStepdefs;
+import com.cooldatasoft.testing.stepdefs.Template1Stepdefs;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * Create one class per API
  */
 @Slf4j
-public class ApiStepdefs extends TemplateStepdefs {
+public class Api1Stepdefs extends Template1Stepdefs {
 
     @Given("^\"([^\"]*)\" is up and running$")
     public void _isUpAndRunning(String apiName) {

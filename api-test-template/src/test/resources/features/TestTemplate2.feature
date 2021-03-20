@@ -1,8 +1,8 @@
 @CustomerApi
-Feature: some description
+Feature: some feature description 2
 
 #  @groupName @customerApi_1 @groupName_1
-  Scenario: testing adding customer - some description
+  Scenario: testing adding customer - some description 2
     Given "customerApi" is up and running
     And I prepare scenario number "1" in group "application"
     And request has header with name "headerName1" and value "headerValue1"

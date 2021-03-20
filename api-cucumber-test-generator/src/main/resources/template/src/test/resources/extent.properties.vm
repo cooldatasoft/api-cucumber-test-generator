@@ -2,10 +2,13 @@ extent.reporter.klov.start=false
 extent.reporter.spark.start=true
 extent.reporter.json.start=true
 extent.reporter.pdf.start=true
+extent.reporter.html.start=true
 
 extent.reporter.klov.config=src/test/resources/klov.properties
 extent.reporter.spark.config=src/test/resources/extent-config.xml
+extent.reporter.pdf.config=src/test/resources/pdf-config.yaml
 
+extent.reporter.html.out=test-output/html/extent-cucumber-report.html
 extent.reporter.spark.out=test-output/Spark/ExtentSpark.html
 extent.reporter.json.out=test-output/Json/ExtentJson.json
 extent.reporter.pdf.out=test-output/PdfReport/ExtentPdf.pdf
@@ -15,7 +18,7 @@ extent.reporter.spark.vieworder=dashboard,test,category,exception,author,device,
 
 #embed image as base64 string src
 extent.reporter.spark.base64imagesrc=true
-screenshot.dir=test-output/
+screenshot.dir=test-output/screenshots/
 screenshot.rel.path=../
 systeminfo.os=Windows
 systeminfo.version=8.1

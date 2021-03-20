@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Cucumber Framework" parallel="classes" thread-count="2" verbose="2">
+    <test name="Cucumber Tests">
+        <classes>
+            <class name="com.cooldatasoft.testing.runner.RunCukeIT1"/>
+            <class name="com.cooldatasoft.testing.runner.RunCukeIT2"/>
+        </classes>
+    </test>
+</suite>
