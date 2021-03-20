@@ -71,8 +71,9 @@ public class Main {
                 "src/main/resources/template/src/test/resources/extent.properties.vm");
 
 
+
+        String testConfigJsonStr = FileUtils.readFileToString(new File(INPUT_TESTS_FILE), "UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        String testConfigJsonStr = IOUtils.resourceToString(INPUT_TESTS_FILE, StandardCharsets.UTF_8);
         TestConfig testConfig = objectMapper.readValue(testConfigJsonStr, TestConfig.class);
 
 
@@ -80,15 +81,18 @@ public class Main {
             velocityContext.put("apiName", apiName);
             velocityContext.put("api", api);
             try {
-                createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/" + apiName + ".feature",
+                createFile(velocityEngine, velocityContext,
+                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/" + apiName + ".feature",
                         "src/main/resources/template/src/test/resources/features/TestTemplate.feature.vm");
 
 
-                createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/stepdefs/core/ApiStepdefs.java",
-                        "src/main/resources/template/src/test/java/"+basePackage+"/stepdefs/core/_"+WordUtils.capitalize(apiName)+"Stepdefs.java.vm");
+                createFile(velocityEngine, velocityContext,
+                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "src/test/java/"+basePackage+"/stepdefs/core/_"+WordUtils.capitalize(apiName)+"Stepdefs.java",
+                        "src/main/resources/template/src/test/java/basePackage/stepdefs/core/ApiStepdefs.java.vm");
 
-                createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/stepdefs/TemplateStepdefs.java",
-                        "src/main/resources/template/src/test/java/"+basePackage+"/stepdefs/"+ WordUtils.capitalize(apiName)+"Stepdefs.java.vm");
+                createFile(velocityEngine, velocityContext,
+                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "src/test/java/"+basePackage+"/stepdefs/"+ WordUtils.capitalize(apiName)+"Stepdefs.java",
+                        "src/main/resources/template/src/test/java/basePackage/stepdefs/TemplateStepdefs.java.vm");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -129,7 +133,8 @@ public class Main {
                     contextForEnv.put("apiName", apiName);
                     contextForEnv.put("environment", environment);
 
-                    createFile(velocityEngine, contextForEnv, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties",
+                    createFile(velocityEngine, contextForEnv,
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties",
                             "src/main/resources/template/src/test/resources/config/env/config.properties.vm", true);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -140,26 +145,37 @@ public class Main {
         FileUtils.copyFile(new File(INPUT_TESTS_FILE), new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/test-config.json"));
 
 
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/base/BaseStepdefs.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/base/BaseStepdefs.java.vm");
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/config/Config.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/config/Config.java.vm");
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/base/BaseStepdefs.java",
+                "src/main/resources/template/src/test/java/basePackage/base/BaseStepdefs.java.vm");
+
+        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/config/Config.java",
+                "src/main/resources/template/src/test/java/basePackage/config/Config.java.vm");
+
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/data/Api.java",
+                "src/main/resources/template/src/test/java/basePackage/data/Api.java.vm");
+
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/data/Environment.java",
+                "src/main/resources/template/src/test/java/basePackage/data/Environment.java.vm");
+
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/data/Pair.java",
+                "src/main/resources/template/src/test/java/basePackage/data/Pair.java.vm");
+
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/data/Scenario.java",
+                "src/main/resources/template/src/test/java/basePackage/data/Scenario.java.vm");
+
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/data/TestConfig.java",
+                "src/main/resources/template/src/test/java/basePackage/data/TestConfig.java.vm");
 
 
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/data/Api.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/data/Api.java.vm");
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/data/Environment.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/data/Environment.java.vm");
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/data/Pair.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/data/Pair.java.vm");
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/data/Scenario.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/data/Scenario.java.vm");
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/data/TestConfig.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/data/TestConfig.java.vm");
-
-
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/basePackage/runner/RunCukeIT.java",
-                "src/main/resources/template/src/test/java/"+basePackage+"/runner/RunCukeIT.java.vm");
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/runner/RunCukeIT.java",
+                "src/main/resources/template/src/test/java/basePackage/runner/RunCukeIT.java.vm");
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
