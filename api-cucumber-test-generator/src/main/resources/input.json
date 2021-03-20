@@ -1,0 +1,213 @@
+{
+  "CurrencyApi": {
+    "description": "Currency API",
+    "environments": [
+      {
+        "name": "dev",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      },
+      {
+        "name": "ci",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      }
+    ],
+    "scenarios": [
+      {
+        "scenarioNumber": 1,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/latest",
+        "description": "getting latest rates",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "symbols": "GBP,EUR,TRY"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 2,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/symbols",
+        "description": "get available symbols",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 3,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/{date}",
+        "description": "testing adding customer",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "pathParams": {
+          "date": "2013-12-24"
+        },
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "base": "GBP",
+          "symbols": "TRY,USD"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 4,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/convert",
+        "description": "Convert rates",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "from": "GBP",
+          "to": "TRY",
+          "amount": "1"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 5,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/timeseries",
+        "description": "Convert rates",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "start_date": "2012-05-01",
+          "end_date": "2012-05-25"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      }
+    ]
+  },
+
+  "OtherCurrencyApi": {
+    "description": "Other Currency API",
+    "environments": [
+      {
+        "name": "dev",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      },
+      {
+        "name": "ci",
+        "protocol": "http",
+        "host": "data.fixer.io",
+        "port": 80
+      }
+    ],
+    "scenarios": [
+      {
+        "scenarioNumber": 1,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/latest",
+        "description": "Other get latest",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "symbols": "GBP,EUR,TRY"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 2,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/symbols",
+        "description": "Other symbols",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 3,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/{date}",
+        "description": "Other date",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "pathParams": {
+          "date": "2013-12-24"
+        },
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "base": "GBP",
+          "symbols": "TRY,USD"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 4,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/convert",
+        "description": "Other Convert rates",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "from": "GBP",
+          "to": "TRY",
+          "amount": "1"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      },
+      {
+        "scenarioNumber": 5,
+        "groupName": "application",
+        "requestMethod": "GET",
+        "contextPath": "/api/timeseries",
+        "description": "Other Convert rates",
+        "consumes": "application/json",
+        "produces": "application/json",
+        "queryParams": {
+          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "start_date": "2012-05-01",
+          "end_date": "2012-05-25"
+        },
+        "hasRequestBody": "false",
+        "hasResponseBody": "true",
+        "responseStatus": 200
+      }
+    ]
+  }
+}

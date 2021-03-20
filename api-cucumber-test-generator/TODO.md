@@ -6,9 +6,9 @@ TODO
 * print logs
 
 
-* create feature file per scenario
-* set specific feature inside the runner
 * aggregate all runners report into 1
+* common steps for group of scenarios
+* common steps for api of scenarios
 
 
 
@@ -42,7 +42,7 @@ Sample input format
         "consumes": "application/json",
         "produces": "application/json",
         "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
+          "access_key": "ACCESS_KEY",
           "from": "GBP",
           "to": "USD",
           "amount": "1"
