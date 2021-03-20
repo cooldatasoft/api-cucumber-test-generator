@@ -87,11 +87,11 @@ public class Main {
 
 
                 createFile(velocityEngine, velocityContext,
-                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "src/test/java/"+basePackage+"/stepdefs/core/_"+WordUtils.capitalize(apiName)+"Stepdefs.java",
+                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/stepdefs/core/_"+WordUtils.capitalize(apiName)+"Stepdefs.java",
                         "src/main/resources/template/src/test/java/basePackage/stepdefs/core/ApiStepdefs.java.vm");
 
                 createFile(velocityEngine, velocityContext,
-                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "src/test/java/"+basePackage+"/stepdefs/"+ WordUtils.capitalize(apiName)+"Stepdefs.java",
+                        OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/"+basePackage+"/stepdefs/"+ WordUtils.capitalize(apiName)+"Stepdefs.java",
                         "src/main/resources/template/src/test/java/basePackage/stepdefs/TemplateStepdefs.java.vm");
 
             } catch (IOException e) {
