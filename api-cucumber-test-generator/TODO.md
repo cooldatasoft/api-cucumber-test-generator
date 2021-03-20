@@ -3,7 +3,7 @@ TODO
 * scenarios.json might contain the same apiName multiple times. A valdiation is needed before execution.
 * validate input.json before processing
 * read paramaters from external properties
-
+* print logs
 
 
 Sample input format
