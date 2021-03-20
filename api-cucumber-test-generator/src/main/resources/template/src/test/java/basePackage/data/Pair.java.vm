@@ -1,4 +1,4 @@
-package $basePackage.data;
+package ${basePackage}.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

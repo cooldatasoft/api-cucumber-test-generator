@@ -1,9 +1,9 @@
-package $basePackage.base;
+package ${basePackage}.base;
 
-import $basePackage.config.Config;
-import $basePackage.data.Api;
-import $basePackage.data.Scenario;
-import $basePackage.data.TestConfig;
+import ${basePackage}.config.Config;
+import ${basePackage}.data.Api;
+import ${basePackage}.data.Scenario;
+import ${basePackage}.data.TestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

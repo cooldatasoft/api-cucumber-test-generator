@@ -1,6 +1,6 @@
-package $basePackage.stepdefs;
+package ${basePackage}.stepdefs;
 
-import $basePackage.base.BaseStepdefs;
+import ${basePackage}.base.BaseStepdefs;
 
 /**
  * You can change this class and it will not get overridden

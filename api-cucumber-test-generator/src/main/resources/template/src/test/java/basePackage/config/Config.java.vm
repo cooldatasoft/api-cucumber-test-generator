@@ -1,4 +1,4 @@
-package $basePackage.config;
+package ${basePackage}.config;
 
 import java.io.IOException;
 import java.io.InputStream;

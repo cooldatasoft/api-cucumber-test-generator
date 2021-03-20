@@ -1,4 +1,4 @@
-package $basePackage.runner;
+package ${basePackage}.runner;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
                 "summary"
         }
-        , glue = "$basePackage"
+        , glue = "${basePackage}"
         , features = "classpath:features/"
         , publish = false
 )
