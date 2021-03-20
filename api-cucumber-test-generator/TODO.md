@@ -6,6 +6,12 @@ TODO
 * print logs
 
 
+* create feature file per scenario
+* set specific feature inside the runner
+* aggregate all runners report into 1
+
+
+
 Sample input format
 
 ```json

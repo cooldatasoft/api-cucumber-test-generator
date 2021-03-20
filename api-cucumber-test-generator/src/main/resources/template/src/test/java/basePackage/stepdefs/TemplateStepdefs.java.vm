@@ -4,10 +4,8 @@ import ${basePackage}.base.BaseStepdefs;
 
 /**
  * You can change this class and it will not get overridden
- *
- * Create one class per API along with ApiStepdefs class
  */
-public class ${apiName}Stepdefs extends BaseStepdefs {
+public class ${capitalizedApiName}${scenarioNumber}Stepdefs extends BaseStepdefs {
 
     protected void beforeInit(){
 

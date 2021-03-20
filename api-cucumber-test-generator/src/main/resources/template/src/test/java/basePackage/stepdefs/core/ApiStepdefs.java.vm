@@ -1,18 +1,17 @@
-package ${basePackage}.stepdefs.core;
+package ${basePackage}.stepdefs.core.${apiName}${scenarioNumber};
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.extern.slf4j.Slf4j;
-import ${basePackage}.stepdefs.${apiName}Stepdefs;
+import ${basePackage}.stepdefs.${capitalizedApiName}${scenarioNumber}Stepdefs;
 
 /**
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
- * Create one class per API
  */
 @Slf4j
-public class _${apiName}Stepdefs extends ${apiName}Stepdefs {
+public class _${capitalizedApiName}${scenarioNumber}Stepdefs extends ${capitalizedApiName}${scenarioNumber}Stepdefs {
 
     @Given("^\"([^\"]*)\" is up and running$")
     public void _isUpAndRunning(String apiName) {

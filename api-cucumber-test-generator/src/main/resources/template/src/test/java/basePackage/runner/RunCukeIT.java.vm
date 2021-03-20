@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
                 "summary"
         }
-        , glue = "${basePackage}"
+        , glue = "${basePackage}.core.${apiName}${scenarioNumber}"
         , features = "classpath:features/"
         , publish = false
 )
-public class RunCukeIT {
+public class RunCukeIT${capitalizedApiName}${scenarioNumber} {
 
 }

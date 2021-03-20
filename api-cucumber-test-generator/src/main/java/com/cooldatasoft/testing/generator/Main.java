@@ -76,6 +76,7 @@ public class Main {
 
         testConfig.forEach((apiName, api) -> {
             velocityContext.put("apiName", apiName);
+            velocityContext.put("capitalizedApiName", WordUtils.capitalize(apiName));
             velocityContext.put("api", api);
             try {
                 createFile(velocityEngine, velocityContext,
@@ -93,7 +94,7 @@ public class Main {
 
                 try {
                     if (consumes.contains("json")) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName +scenarioNumber + ".json"),
+                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".json"),
                                 "Place your request body here".getBytes());
                     } else if (consumes.contains("xml")) {
                         Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".xml"),
@@ -118,17 +119,22 @@ public class Main {
                 }
 
                 try {
-
+                    velocityContext.put("scenarioNumber", scenarioNumber);
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/"+apiName+scenarioNumber+"/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/core/ApiStepdefs.java.vm");
 
                     //Do not override this file if exists
                     if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java").exists()) {
                         createFile(velocityEngine, velocityContext,
-                                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + "Stepdefs.java",
+                                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                                 "src/main/resources/template/src/test/java/basePackage/stepdefs/TemplateStepdefs.java.vm");
                     }
+
+                    createFile(velocityEngine, velocityContext,
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/runner/RunCukeIT"+ WordUtils.capitalize(apiName) + scenarioNumber +".java",
+                            "src/main/resources/template/src/test/java/basePackage/runner/RunCukeIT.java.vm");
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -179,10 +185,6 @@ public class Main {
                 OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data/TestConfig.java",
                 "src/main/resources/template/src/test/java/basePackage/data/TestConfig.java.vm");
 
-
-        createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/runner/RunCukeIT.java",
-                "src/main/resources/template/src/test/java/basePackage/runner/RunCukeIT.java.vm");
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
@@ -190,6 +192,14 @@ public class Main {
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template, boolean append) throws IOException {
+
+        File file = new File(outputFile);
+        if(!file.exists()){
+            file = file.getParentFile();
+            Files.createDirectories(Paths.get(file.getAbsolutePath()));
+        }
+
+
         Template t = velocityEngine.getTemplate(template);
         Writer writer = new FileWriter(outputFile, append);
         t.merge(context, writer);
