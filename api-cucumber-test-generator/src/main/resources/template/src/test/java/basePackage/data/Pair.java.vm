@@ -3,6 +3,10 @@ package ${basePackage}.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
 @Data
 @AllArgsConstructor
 public class Pair<K, V> {

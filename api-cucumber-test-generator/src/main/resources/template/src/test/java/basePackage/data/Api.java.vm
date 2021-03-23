@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
 @Data
 public class Api {
 

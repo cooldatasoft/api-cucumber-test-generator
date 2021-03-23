@@ -3,6 +3,10 @@ package ${basePackage}.runner;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
+/**
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
 @CucumberOptions(
         plugin = {
                 "pretty",

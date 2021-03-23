@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.util.HashMap;
 
+/**
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
 @Data
 public class TestConfig extends HashMap<String, Api> {
 

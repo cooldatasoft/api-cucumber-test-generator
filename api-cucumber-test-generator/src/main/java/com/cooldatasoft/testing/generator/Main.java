@@ -94,6 +94,17 @@ public class Main {
             velocityContext.put("api", api);
 
 
+            try {
+                //Do not override this file if exists
+                if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java").exists()) {
+                    createFile(velocityEngine, velocityContext,
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java",
+                            "src/main/resources/template/src/test/java/basePackage/stepdefs/ApiStepdefs.java.vm");
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
             api.getScenarios().forEach(scenario -> {
 
                 int scenarioNumber = scenario.getScenarioNumber();
@@ -154,13 +165,13 @@ public class Main {
                     velocityContext.put("scenarioNumber", scenarioNumber);
                     createFile(velocityEngine, velocityContext,
                             OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/" + apiName + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
-                            "src/main/resources/template/src/test/java/basePackage/stepdefs/core/ApiStepdefs.java.vm");
+                            "src/main/resources/template/src/test/java/basePackage/stepdefs/core/TopLevelApiStepdefs.java.vm");
 
                     //Do not override this file if exists
                     if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java").exists()) {
                         createFile(velocityEngine, velocityContext,
                                 OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
-                                "src/main/resources/template/src/test/java/basePackage/stepdefs/TemplateStepdefs.java.vm");
+                                "src/main/resources/template/src/test/java/basePackage/stepdefs/ScenarioStepdefs.java.vm");
                     }
 
                     createFile(velocityEngine, velocityContext,

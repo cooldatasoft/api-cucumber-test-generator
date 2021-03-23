@@ -10,84 +10,109 @@ import ${basePackage}.stepdefs.${capitalizedApiName}${scenarioNumber}Stepdefs;
 /**
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */
+
 @Slf4j
 public class _${capitalizedApiName}${scenarioNumber}Stepdefs extends ${capitalizedApiName}${scenarioNumber}Stepdefs {
 
     @Given("^\"([^\"]*)\" is up and running$")
     public void _isUpAndRunning(String apiName) {
-        beforeInit();
+        apiBeforeInit();
+        scenarioBeforeInit();
         init();
-        afterInit();
+        scenarioAfterInit();
+        apiAfterInit();
 
-        beforeIsUpAndRunning();
+        apiBeforeIsUpAndRunning();
+        scenarioBeforeIsUpAndRunning();
         isUpAndRunning(apiName);
-        afterIsUpAndRunning();
+        scenarioAfterIsUpAndRunning();
+        apiAfterIsUpAndRunning();
     }
 
     @Given("^\"([^\"]*)\" is up and running at \"([^\"]*)\" on port \"([^\"]*)\" over protocol \"([^\"]*)\"$")
     public void _isUpAndRunningAtOnPortOverProtocol(String apiName, String host, int port, String protocol) {
-        beforeInit();
+        apiBeforeInit();
+        scenarioBeforeInit();
         init();
-        afterInit();
+        scenarioAfterInit();
+        apiAfterInit();
 
-        beforeIsUpAndRunning();
+        apiBeforeIsUpAndRunning();
+        scenarioBeforeIsUpAndRunning();
         isUpAndRunningAtOnPortOverProtocol(apiName, host, port, protocol);
-        afterIsUpAndRunning();
+        scenarioAfterIsUpAndRunning();
+        apiAfterIsUpAndRunning();
     }
 
     @And("^I prepare scenario number \"([^\"]*)\" in group \"([^\"]*)\"$")
     public void _iPrepareScenarioNumberInGroup(int scenarioNumebr, String groupName) {
-        beforeIPrepareScenarioNumberInGroup();
+        apiBeforeIPrepareScenarioNumberInGroup();
+        scenarioBeforeIPrepareScenarioNumberInGroup();
         iPrepareScenarioNumberInGroup(scenarioNumebr, groupName);
-        afterIPrepareScenarioNumberInGroup();
+        scenarioAfterIPrepareScenarioNumberInGroup();
+        apiAfterIPrepareScenarioNumberInGroup();
     }
 
     @And("^request has header with name \"([^\"]*)\" and value \"([^\"]*)\"$")
     public void _requestHasHeaderWithNameAndValue(String headerName, String headerValue) {
-        beforeRequestHasHeaderWithNameAndValue();
+        apiBeforeRequestHasHeaderWithNameAndValue();
+        scenarioBeforeRequestHasHeaderWithNameAndValue();
         requestHasHeaderWithNameAndValue(headerName, headerValue);
-        afterRequestHasHeaderWithNameAndValue();
+        scenarioAfterRequestHasHeaderWithNameAndValue();
+        apiAfterRequestHasHeaderWithNameAndValue();
     }
 
     @And("^path param \"([^\"]*)\" has value \"([^\"]*)\"$")
     public void _pathParamHasValue(String pathParamName, String pathParamValue) {
-        beforePathParamHasValue();
+        apiBeforePathParamHasValue();
+        scenarioBeforePathParamHasValue();
         pathParamHasValue(pathParamName, pathParamValue);
-        afterPathParamHasValue();
+        scenarioAfterPathParamHasValue();
+        apiAfterPathParamHasValue();
     }
 
     @And("^has a query param with name \"([^\"]*)\" and value \"([^\"]*)\"$")
     public void _hasAQueryParamWithNameAndValue(String queryParamName, String queryParamValue) {
-        beforeHasAQueryParamWithNameAndValue();
+        apiBeforeHasAQueryParamWithNameAndValue();
+        scenarioBeforeHasAQueryParamWithNameAndValue();
         hasAQueryParamWithNameAndValue(queryParamName, queryParamValue);
-        afterHasAQueryParamWithNameAndValue();
+        scenarioAfterHasAQueryParamWithNameAndValue();
+        apiAfterHasAQueryParamWithNameAndValue();
     }
 
     @And("^endpoint consumes \"([^\"]*)\"$")
     public void _endpointConsumes(String consumes) {
-        beforeEndpointConsumes();
+        apiBeforeEndpointConsumes();
+        scenarioBeforeEndpointConsumes();
         endpointConsumes(consumes);
-        afterEndpointConsumes();
+        scenarioAfterEndpointConsumes();
+        apiAfterEndpointConsumes();
     }
 
     @And("^endpoint produces \"([^\"]*)\"$")
     public void _endpointProduces(String produces) {
-        beforeEndpointProduces();
+        apiBeforeEndpointProduces();
+        scenarioBeforeEndpointProduces();
         endpointProduces(produces);
-        afterEndpointProduces();
+        scenarioAfterEndpointProduces();
+        apiAfterEndpointProduces();
     }
 
     @When("^I make a \"([^\"]*)\" request to path \"([^\"]*)\"$")
     public void _iMakeARequestToPath(String requestMethod, String contextPath) throws Throwable {
-        beforeIMakeARequestToPath();
+        apiBeforeIMakeARequestToPath();
+        scenarioBeforeIMakeARequestToPath();
         iMakeARequestToPath(requestMethod, contextPath);
-        afterIMakeARequestToPath();
+        scenarioAfterIMakeARequestToPath();
+        apiAfterIMakeARequestToPath();
     }
 
     @Then("^I should get a response with http status code \"([^\"]*)\"$")
     public void _iShouldGetAResponseWithHttpStatusCode(int responseStatus) {
-        beforeIShouldGetAResponseWithHttpStatusCode();
+        apiBeforeIShouldGetAResponseWithHttpStatusCode();
+        scenarioBeforeIShouldGetAResponseWithHttpStatusCode();
         iShouldGetAResponseWithHttpStatusCode(responseStatus);
-        afterIShouldGetAResponseWithHttpStatusCode();
+        scenarioAfterIShouldGetAResponseWithHttpStatusCode();
+        apiAfterIShouldGetAResponseWithHttpStatusCode();
     }
 }
