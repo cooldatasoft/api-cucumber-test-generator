@@ -12,7 +12,8 @@ import io.cucumber.testng.CucumberOptions;
                 "pretty",
                 "html:target/cucumber",
                 "json:target/cucumber-report/${apiName}${scenarioNumber}.json",
-                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter: target/report.html"
+                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
+//                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:target/report.html"
         }
         , glue = "${basePackage}.stepdefs.core.${apiName}${scenarioNumber}"
         , features = "src/test/resources/features/${apiName}${scenarioNumber}.feature"
