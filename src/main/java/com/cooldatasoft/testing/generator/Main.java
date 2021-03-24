@@ -15,10 +15,7 @@ import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.cooldatasoft.testing.generator.Constants.*;
 
@@ -89,6 +86,7 @@ public class Main {
         testConfig.forEach((apiName, api) -> {
             velocityContext.put("apiName", apiName);
             velocityContext.put("capitalizedApiName", WordUtils.capitalize(apiName));
+            velocityContext.put("apiNameLowercase", apiName.toLowerCase());
             velocityContext.put("api", api);
 
 
