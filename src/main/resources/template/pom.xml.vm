@@ -158,10 +158,6 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <systemPropertyVariables>
-                        <extent.reporter.spark.start>true</extent.reporter.spark.start>
-                        <extent.reporter.spark.out>test-output/Spark/Spark.html</extent.reporter.spark.out>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 
