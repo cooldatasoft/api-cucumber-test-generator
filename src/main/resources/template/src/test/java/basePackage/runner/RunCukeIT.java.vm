@@ -16,7 +16,7 @@ import io.cucumber.testng.CucumberOptions;
                 "json:target/cucumber-report/${apiName}${scenarioNumber}.json",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         }
-        , glue = "${basePackage}.stepdefs.core.${apiName}${scenarioNumber}"
+        , glue = "${basePackage}.stepdefs.core.${apiNameLowercase}${scenarioNumber}"
         , features = "src/test/resources/features/${apiName}${scenarioNumber}.feature"
         , monochrome = true
 )
