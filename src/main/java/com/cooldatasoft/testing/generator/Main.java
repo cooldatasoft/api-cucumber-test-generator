@@ -15,16 +15,24 @@ import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.cooldatasoft.testing.generator.Constants.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    public static void main(String[] args) throws IOException {
         new Main().start();
     }
 
+    public String getCreateTimestamp(){
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return currentDateTime.format(formatter);
+    }
     private void start() throws IOException {
 
         String basePackage = MAVEN_GROUP_ID.replace("\\.", "/");
@@ -43,12 +51,14 @@ public class Main {
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.init();
 
+
+
         //pom.xml
         Map<String, Object> map = new HashMap<>();
         map.put("groupId", MAVEN_GROUP_ID);
         map.put("artifactId", MAVEN_ARTIFACT_ID);
         map.put("basePackage", MAVEN_GROUP_ID);
-
+        map.put("createTimestamp", getCreateTimestamp());
         final VelocityContext velocityContext = new VelocityContext();
         map.forEach(velocityContext::put);
 
@@ -160,7 +170,7 @@ public class Main {
                 try {
                     velocityContext.put("scenarioNumber", scenarioNumber);
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/" + apiName + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/" + apiName.toLowerCase() + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/core/TopLevelApiStepdefs.java.vm");
 
                     //Do not override this file if exists

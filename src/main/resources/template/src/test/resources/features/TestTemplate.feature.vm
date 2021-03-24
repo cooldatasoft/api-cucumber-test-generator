@@ -1,3 +1,4 @@
+# Created : ${createTimestamp}
 Feature: $api.description - $scenario.description $scenario.scenarioNumber
 
 #set( $underscore = "_" )

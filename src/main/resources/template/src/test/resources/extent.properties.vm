@@ -1,3 +1,4 @@
+#Created : ${createTimestamp}
 extent.reporter.klov.start=false
 extent.reporter.spark.start=true
 extent.reporter.json.start=true

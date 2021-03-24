@@ -3,7 +3,9 @@ package ${basePackage}.stepdefs;
 import ${basePackage}.stepdefs.api.${capitalizedApiName}Stepdefs;
 
 /**
- * You can place your custom code inside the methodsand it wil not get overridden.
+ * Created : ${createTimestamp}
+ *
+ * You can place your custom code inside the methods and it wil not get overridden.
  * DO NOT CHANGE THE NAME OF THE METHODS, IMPLEMENTATION ONLY
  */
 

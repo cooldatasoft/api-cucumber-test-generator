@@ -25,6 +25,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
+ * Created : ${createTimestamp}
+ *
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */
 
