@@ -35,13 +35,13 @@ public class Main {
     }
     private void start() throws IOException {
 
-        String basePackage = MAVEN_GROUP_ID.replace("\\.", "/");
+        String basePackagePath = MAVEN_GROUP_ID.replaceAll("\\.", "/");
 
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/base").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/config").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/runner").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/base").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/config").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/runner").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/core").mkdirs();
 
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env").mkdirs();
@@ -102,9 +102,9 @@ public class Main {
 
             try {
                 //Do not override this file if exists
-                if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java").exists()) {
+                if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java").exists()) {
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/ApiStepdefs.java.vm");
                 }
             } catch(Exception e) {
@@ -170,18 +170,18 @@ public class Main {
                 try {
                     velocityContext.put("scenarioNumber", scenarioNumber);
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/core/" + apiName.toLowerCase() + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/core/" + apiName.toLowerCase() + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/core/TopLevelApiStepdefs.java.vm");
 
                     //Do not override this file if exists
-                    if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java").exists()) {
+                    if (!new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java").exists()) {
                         createFile(velocityEngine, velocityContext,
-                                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
+                                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                                 "src/main/resources/template/src/test/java/basePackage/stepdefs/ScenarioStepdefs.java.vm");
                     }
 
                     createFile(velocityEngine, velocityContext,
-                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/runner/RunCukeIT" + WordUtils.capitalize(apiName) + scenarioNumber + ".java",
+                            OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/runner/RunCukeIT" + WordUtils.capitalize(apiName) + scenarioNumber + ".java",
                             "src/main/resources/template/src/test/java/basePackage/runner/RunCukeIT.java.vm");
 
                 } catch (IOException e) {
@@ -208,30 +208,30 @@ public class Main {
 
 
         createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/base/BaseStepdefs.java",
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/base/BaseStepdefs.java",
                 "src/main/resources/template/src/test/java/basePackage/base/BaseStepdefs.java.vm");
 
-        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/config/Config.java",
+        createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/config/Config.java",
                 "src/main/resources/template/src/test/java/basePackage/config/Config.java.vm");
 
         createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data/Api.java",
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/Api.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Api.java.vm");
 
         createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data/Environment.java",
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/Environment.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Environment.java.vm");
 
         createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data/Pair.java",
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/Pair.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Pair.java.vm");
 
         createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data/Scenario.java",
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/Scenario.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Scenario.java.vm");
 
         createFile(velocityEngine, velocityContext,
-                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackage + "/data/TestConfig.java",
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/TestConfig.java",
                 "src/main/resources/template/src/test/java/basePackage/data/TestConfig.java.vm");
 
     }
