@@ -2,7 +2,6 @@ package com.cooldatasoft.testing.generator;
 
 import com.cooldatasoft.testing.generator.data.TestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -23,10 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.cooldatasoft.testing.generator.Constants.*;
 
-@Slf4j
+//@Slf4j
 public class Main {
 
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private static final List<String> httpMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH");
+
 
     public static void main(String[] args) throws IOException {
         new Main().start();
@@ -41,20 +43,11 @@ public class Main {
 
         String basePackagePath = MAVEN_GROUP_ID.replaceAll("\\.", "/");
 
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/base").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/config").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/runner").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/core").mkdirs();
+        createDirectories(basePackagePath);
 
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response").mkdirs();
 
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.init();
-
 
 
         //pom.xml
@@ -65,6 +58,9 @@ public class Main {
         map.put("createTimestamp", getCreateTimestamp());
         final VelocityContext velocityContext = new VelocityContext();
         map.forEach(velocityContext::put);
+        map.forEach((s, o) -> {
+            System.out.println(s+"="+o);
+        });
 
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/pom.xml", "src/main/resources/template/pom.xml.vm");
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/.gitignore", "src/main/resources/template/.gitignore.vm");
@@ -238,7 +234,19 @@ public class Main {
 
     }
 
-    static final List<String> httpMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "TRACE", "OPTIONS", "CONNECT", "PATCH");
+    private void createDirectories(String basePackagePath) {
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/base").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/config").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/runner").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/core").mkdirs();
+
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request").mkdirs();
+        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response").mkdirs();
+        System.out.println("Created directories...");
+    }
 
     private TestConfig getTestConfig() throws IOException {
         String testConfigJsonStr = FileUtils.readFileToString(new File(INPUT_TESTS_FILE), "UTF-8");
@@ -342,5 +350,6 @@ public class Main {
         t.merge(context, writer);
         writer.flush();
         writer.close();
+        System.out.println("Created : "+outputFile);
     }
 }
