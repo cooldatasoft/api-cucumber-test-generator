@@ -11,3 +11,4 @@ TODO
 * Use swagger to discover endpoints
 * use hateoas to discover endpoints
 
+* checktstyle into template
