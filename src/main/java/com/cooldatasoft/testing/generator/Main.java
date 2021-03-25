@@ -2,7 +2,9 @@ package com.cooldatasoft.testing.generator;
 
 import com.cooldatasoft.testing.generator.data.TestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -12,15 +14,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.cooldatasoft.testing.generator.Constants.*;
 
+@Slf4j
 public class Main {
 
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -33,6 +36,7 @@ public class Main {
         LocalDateTime currentDateTime = LocalDateTime.now();
         return currentDateTime.format(formatter);
     }
+
     private void start() throws IOException {
 
         String basePackagePath = MAVEN_GROUP_ID.replaceAll("\\.", "/");
@@ -76,9 +80,7 @@ public class Main {
                 "src/main/resources/template/src/test/resources/extent.properties.vm");
 
 
-        String testConfigJsonStr = FileUtils.readFileToString(new File(INPUT_TESTS_FILE), "UTF-8");
-        ObjectMapper objectMapper = new ObjectMapper();
-        TestConfig testConfig = objectMapper.readValue(testConfigJsonStr, TestConfig.class);
+        TestConfig testConfig = getTestConfig();
 
 
         List<String> runners = new ArrayList<>();
@@ -234,6 +236,92 @@ public class Main {
                 OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/TestConfig.java",
                 "src/main/resources/template/src/test/java/basePackage/data/TestConfig.java.vm");
 
+    }
+
+    static final List<String> httpMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "TRACE", "OPTIONS", "CONNECT", "PATCH");
+
+    private TestConfig getTestConfig() throws IOException {
+        String testConfigJsonStr = FileUtils.readFileToString(new File(INPUT_TESTS_FILE), "UTF-8");
+        ObjectMapper objectMapper = new ObjectMapper();
+        TestConfig testConfig = objectMapper.readValue(testConfigJsonStr, TestConfig.class);
+
+        List<String> errors = new ArrayList<>();
+        //validate
+        testConfig.forEach((apiName, api) -> {
+            if(!apiName.matches("[a-zA-Z0-9]*")) {
+                errors.add("ApiName can only contain letters and number : "+apiName);
+            }
+
+            if(api.getEnvironments().size()<1){
+                errors.add("At least 1 envrionemnt should be defined!");
+            }
+
+            api.getEnvironments().forEach(environment -> {
+                if(StringUtils.isBlank(environment.getName())){
+                    errors.add("Environment name cannot be blank!");
+                }
+
+                if(StringUtils.isBlank(environment.getProtocol())){
+                    errors.add("Environment protocol cannot be blank!");
+                }
+
+                if(StringUtils.isBlank(environment.getHost())){
+                    errors.add("Environment host cannot be blank!");
+                }
+
+                if(environment.getPort() < 0){
+                    errors.add("Environment port should be a valid number! port : "+environment.getPort());
+                }
+            });
+
+            if(api.getScenarios().size() ==0){
+                errors.add("At least 1 scenario should be defined!");
+            }
+
+            AtomicInteger atomicInteger = new AtomicInteger(1);
+            api.getScenarios().forEach(scenario -> {
+                if(scenario.getScenarioNumber() == 0){
+                    scenario.setScenarioNumber(atomicInteger.getAndIncrement());
+                }
+
+                if(StringUtils.isBlank(scenario.getRequestMethod())){
+                    errors.add("Request method cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+
+                if(!httpMethods.contains(scenario.getRequestMethod().toUpperCase())){
+                    errors.add("Request method must be valid! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+
+                if(StringUtils.isBlank(scenario.getContextPath())){
+                    errors.add("ContextPath cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+                if(!scenario.getContextPath().startsWith("/")){
+                    errors.add("ContextPath must start with '/' - ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+
+                if(StringUtils.isBlank(scenario.getProduces())){
+                    errors.add("Scenario produces cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+
+                if(StringUtils.isBlank(scenario.getConsumes())){
+                    errors.add("Scenario consumes cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+
+                if(scenario.getResponseStatus()<100 && scenario.getResponseStatus()>=600){
+                    errors.add("Response code must be a valid response code! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+
+                if(scenario.getRequestMethod().toUpperCase().equals("GET") && scenario.getHasRequestBody()) {
+                    errors.add("GET request should not have a body! ScenarioNumber : "+scenario.getScenarioNumber());
+                }
+            });
+        });
+
+        if(errors.size() > 0){
+            errors.forEach(System.err::println);
+            throw new RuntimeException("Invalid input json file!");
+        }
+        return testConfig;
     }
 
     public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
