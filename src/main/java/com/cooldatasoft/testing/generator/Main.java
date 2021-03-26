@@ -126,40 +126,26 @@ public class Main {
 
                 try {
                     String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
-                    if (consumes.contains("json") && scenario.getHasRequestBody()) {
-                        if (!new File(requestFile + ".json").exists()) {
-                            Files.write(Paths.get(requestFile + ".json"),
-                                    "{\n\t\"message\":\"Place your request body here\"\n}".getBytes());
+
+                    if(StringUtils.isNotBlank(scenario.getRequestBody())) {
+                        if (consumes.contains("json")) {
+                            Files.write(Paths.get(requestFile + ".json"), scenario.getRequestBody().getBytes());
+                        } else if (consumes.contains("xml")) {
+                            Files.write(Paths.get(requestFile + ".xml"), scenario.getRequestBody().getBytes());
+                        } else {
+                            Files.write(Paths.get(requestFile + ".txt"), scenario.getRequestBody().getBytes());
                         }
-                    } else if (consumes.contains("xml") && scenario.getHasRequestBody()) {
-                        if (!new File(requestFile + ".xml").exists()) {
-                            Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".xml"),
-                                    "<xml>\n\t<value>Place your request body here</value>\n</xml>".getBytes());
-                        }
-                    } else if (!new File(requestFile + ".txt").exists() && scenario.getHasRequestBody()) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber + ".txt"),
-                                "Place your request body here".getBytes());
-                    } else if (scenario.getHasRequestBody()) {
-                        System.err.println("Unknown consumes : " + consumes);
                     }
 
-
                     String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
-                    if (produces.contains("json") && scenario.getHasResponseBody()) {
-                        if (!new File(responseFile + ".json").exists()) {
-                            Files.write(Paths.get(responseFile + ".json"),
-                                    "{\n\t\"message\":\"Place your response body here\"\n}".getBytes());
+                    if(StringUtils.isNotBlank(scenario.getResponseBody())) {
+                        if (produces.contains("json")) {
+                            Files.write(Paths.get(responseFile + ".json"), scenario.getResponseBody().getBytes());
+                        } else if (produces.contains("xml")) {
+                            Files.write(Paths.get(responseFile + ".xml"), scenario.getResponseBody().getBytes());
+                        } else {
+                            Files.write(Paths.get(responseFile + ".txt"), scenario.getResponseBody().getBytes());
                         }
-                    } else if (produces.contains("xml") && scenario.getHasResponseBody()) {
-                        if (!new File(responseFile + ".xml").exists()) {
-                            Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber + ".xml"),
-                                    "<xml>\n\t<value>Place your response body here</value>\n</xml>".getBytes());
-                        }
-                    } else if (!new File(responseFile + ".txt").exists() && scenario.getHasResponseBody()) {
-                        Files.write(Paths.get(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber + ".txt"),
-                                "Place your response body here".getBytes());
-                    } else if (scenario.getHasResponseBody()) {
-                        System.err.println("Unknown produces : " + produces);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -319,7 +305,7 @@ public class Main {
                     errors.add("Response code must be a valid response code! ScenarioNumber : "+scenario.getScenarioNumber());
                 }
 
-                if(scenario.getRequestMethod().toUpperCase().equals("GET") && scenario.getHasRequestBody()) {
+                if(scenario.getRequestMethod().toUpperCase().equals("GET") && StringUtils.isNotBlank(scenario.getRequestBody())) {
                     errors.add("GET request should not have a body! ScenarioNumber : "+scenario.getScenarioNumber());
                 }
             });

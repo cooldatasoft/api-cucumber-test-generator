@@ -14,8 +14,9 @@ public class Scenario {
     private String description;
     private String consumes;
     private String produces;
-    private Boolean hasRequestBody;
-    private Boolean hasResponseBody;
+
+    private String requestBody;
+    private String responseBody;
     private int responseStatus;
 
     private Map<String, String> headers;
