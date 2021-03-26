@@ -130,33 +130,6 @@ public class Main {
                     e.printStackTrace();
                 }
 
-//                try {
-//                    String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
-//
-//                    if (StringUtils.isNotBlank(scenario.getRequestBody())) {
-//                        if (consumes.contains("json")) {
-//                            Files.write(Paths.get(requestFile + ".json"), scenario.getRequestBody().getBytes());
-//                        } else if (consumes.contains("xml")) {
-//                            Files.write(Paths.get(requestFile + ".xml"), scenario.getRequestBody().getBytes());
-//                        } else {
-//                            Files.write(Paths.get(requestFile + ".txt"), scenario.getRequestBody().getBytes());
-//                        }
-//                    }
-//
-//                    String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
-//                    if (StringUtils.isNotBlank(scenario.getResponseBody())) {
-//                        if (produces.contains("json")) {
-//                            Files.write(Paths.get(responseFile + ".json"), scenario.getResponseBody().getBytes());
-//                        } else if (produces.contains("xml")) {
-//                            Files.write(Paths.get(responseFile + ".xml"), scenario.getResponseBody().getBytes());
-//                        } else {
-//                            Files.write(Paths.get(responseFile + ".txt"), scenario.getResponseBody().getBytes());
-//                        }
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
                 try {
                     velocityContext.put("scenarioNumber", scenarioNumber);
                     createFile(velocityEngine, velocityContext,
@@ -238,8 +211,6 @@ public class Main {
 
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env").mkdirs();
-//        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request").mkdirs();
-//        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response").mkdirs();
         System.out.println("Created directories...");
     }
 
