@@ -189,8 +189,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <sourceJsonReportDirectory>${project.build.directory}/cucumber-report</sourceJsonReportDirectory>
-                    <generatedHtmlReportDirectory>test-report/generated-cluecumber-report</generatedHtmlReportDirectory>
+                    <sourceJsonReportDirectory>${project.build.directory}/cucumber-reports</sourceJsonReportDirectory>
+                    <generatedHtmlReportDirectory>test-report/generated-cluecumber-reports</generatedHtmlReportDirectory>
                     <expandBeforeAfterHooks>true</expandBeforeAfterHooks>
                 </configuration>
             </plugin>

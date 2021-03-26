@@ -13,7 +13,7 @@ import io.cucumber.testng.CucumberOptions;
         plugin = {
                 "pretty",
                 "html:target/cucumber",
-                "json:target/cucumber-report/${apiName}${scenarioNumber}.json",
+                "json:target/cucumber-reports/${apiName}${scenarioNumber}.json",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
         }
         , glue = "${basePackage}.stepdefs.core.${apiNameLowercase}${scenarioNumber}"
