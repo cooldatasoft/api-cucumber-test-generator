@@ -117,4 +117,13 @@ public class _${capitalizedApiName}${scenarioNumber}Stepdefs extends ${capitaliz
         scenarioAfterIShouldGetAResponseWithHttpStatusCode();
         apiAfterIShouldGetAResponseWithHttpStatusCode();
     }
+
+    @And("^I should get a response body\"$")
+    public void _iShouldGetAResponseBody() {
+        apiBeforeIShouldGetAResponseBody();
+        scenarioBeforeIShouldGetAResponseBody();
+        iShouldGetAResponseBody();
+        scenarioAfterIShouldGetAResponseBody();
+        apiAfterIShouldGetAResponseBody();
+    }
 }

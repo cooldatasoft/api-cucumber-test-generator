@@ -173,12 +173,20 @@ public class Main {
                 }
             });
 
+
+
+
+            api.getEnvironments().forEach(environment -> {
+                new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties").delete();
+            });
             api.getEnvironments().forEach(environment -> {
                 try {
                     VelocityContext contextForEnv = new VelocityContext();
                     contextForEnv.put("apiName", apiName);
                     contextForEnv.put("environment", environment);
+                    contextForEnv.put("createTimestamp", getCreateTimestamp());
 
+                    //TODO do not add if it already exists?
                     createFile(velocityEngine, contextForEnv,
                             OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties",
                             "src/main/resources/template/src/test/resources/config/env/config.properties.vm", true);
@@ -186,6 +194,7 @@ public class Main {
                     e.printStackTrace();
                 }
             });
+
         });
 //        String currentDir = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
         FileUtils.copyFile(new File(INPUT_TESTS_FILE), new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/test-config.json"));

@@ -1,10 +1,6 @@
-# Created : ${createTimestamp}
-Feature: $api.description - $scenario.description $scenario.scenarioNumber
-
 #set( $underscore = "_" )
-
-
-
+# Created : ${createTimestamp}
+Feature: $api.description - $scenario.description
 
 @$apiName
 @$scenario.groupName
@@ -25,3 +21,4 @@ And endpoint consumes "$scenario.consumes"
 And endpoint produces "$scenario.produces"
 When I make a "$scenario.requestMethod" request to path "$scenario.contextPath"
 Then I should get a response with http status code "$scenario.responseStatus"
+And I should get a response body

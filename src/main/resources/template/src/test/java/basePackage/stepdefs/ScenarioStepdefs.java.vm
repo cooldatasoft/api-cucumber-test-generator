@@ -11,77 +11,26 @@ import ${basePackage}.stepdefs.api.${capitalizedApiName}Stepdefs;
 
 public class ${capitalizedApiName}${scenarioNumber}Stepdefs extends ${capitalizedApiName}Stepdefs {
 
-    protected void scenarioBeforeInit(){
-
-    }
-
-    protected void scenarioAfterInit() {
-
-    }
-
-    protected void scenarioAfterIsUpAndRunning() {
-    }
-
-    protected void scenarioBeforeIsUpAndRunning() {
-    }
-
-    protected void scenarioAfterIPrepareScenarioNumberInGroup() {
-    }
-
-    protected void scenarioBeforeIPrepareScenarioNumberInGroup() {
-    }
-
-    protected void scenarioAfterRequestHasHeaderWithNameAndValue() {
-    }
-
-    protected void scenarioBeforeRequestHasHeaderWithNameAndValue() {
-    }
-
-    protected void scenarioAfterPathParamHasValue() {
-
-    }
-
-    protected void scenarioBeforePathParamHasValue() {
-
-    }
-
-    protected void scenarioAfterHasAQueryParamWithNameAndValue() {
-
-    }
-
-    protected void scenarioBeforeHasAQueryParamWithNameAndValue() {
-
-    }
-
-
-    protected void scenarioAfterEndpointConsumes() {
-
-    }
-
-    protected void scenarioBeforeEndpointConsumes() {
-
-    }
-
-    protected void scenarioAfterEndpointProduces() {
-
-    }
-
-    protected void scenarioBeforeEndpointProduces() {
-
-    }
-
-
-    protected void scenarioBeforeIMakeARequestToPath() {
-    }
-
-    protected void scenarioAfterIMakeARequestToPath() {
-    }
-
-    protected void scenarioAfterIShouldGetAResponseWithHttpStatusCode() {
-
-    }
-
-    protected void scenarioBeforeIShouldGetAResponseWithHttpStatusCode() {
-
-    }
+    protected void scenarioBeforeInit(){}
+    protected void scenarioAfterInit() {}
+    protected void scenarioAfterIsUpAndRunning() {}
+    protected void scenarioBeforeIsUpAndRunning() {}
+    protected void scenarioAfterIPrepareScenarioNumberInGroup() {}
+    protected void scenarioBeforeIPrepareScenarioNumberInGroup() {}
+    protected void scenarioAfterRequestHasHeaderWithNameAndValue() {}
+    protected void scenarioBeforeRequestHasHeaderWithNameAndValue() {}
+    protected void scenarioAfterPathParamHasValue() {}
+    protected void scenarioBeforePathParamHasValue() {}
+    protected void scenarioAfterHasAQueryParamWithNameAndValue() {}
+    protected void scenarioBeforeHasAQueryParamWithNameAndValue() {}
+    protected void scenarioAfterEndpointConsumes() {}
+    protected void scenarioBeforeEndpointConsumes() {}
+    protected void scenarioAfterEndpointProduces() {}
+    protected void scenarioBeforeEndpointProduces() {}
+    protected void scenarioBeforeIMakeARequestToPath() {}
+    protected void scenarioAfterIMakeARequestToPath() {}
+    protected void scenarioAfterIShouldGetAResponseWithHttpStatusCode() {}
+    protected void scenarioBeforeIShouldGetAResponseWithHttpStatusCode() {}
+    protected void scenarioBeforeIShouldGetAResponseBody() {}
+    protected void scenarioAfterIShouldGetAResponseBody() {}
 }

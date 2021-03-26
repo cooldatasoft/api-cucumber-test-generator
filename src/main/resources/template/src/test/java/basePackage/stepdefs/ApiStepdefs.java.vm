@@ -11,77 +11,26 @@ import ${basePackage}.base.BaseStepdefs;
 
 public class ${capitalizedApiName}Stepdefs extends BaseStepdefs {
 
-    protected void apiBeforeInit(){
-
-    }
-
-    protected void apiAfterInit() {
-
-    }
-
-    protected void apiAfterIsUpAndRunning() {
-    }
-
-    protected void apiBeforeIsUpAndRunning() {
-    }
-
-    protected void apiAfterIPrepareScenarioNumberInGroup() {
-    }
-
-    protected void apiBeforeIPrepareScenarioNumberInGroup() {
-    }
-
-    protected void apiAfterRequestHasHeaderWithNameAndValue() {
-    }
-
-    protected void apiBeforeRequestHasHeaderWithNameAndValue() {
-    }
-
-    protected void apiAfterPathParamHasValue() {
-
-    }
-
-    protected void apiBeforePathParamHasValue() {
-
-    }
-
-    protected void apiAfterHasAQueryParamWithNameAndValue() {
-
-    }
-
-    protected void apiBeforeHasAQueryParamWithNameAndValue() {
-
-    }
-
-
-    protected void apiAfterEndpointConsumes() {
-
-    }
-
-    protected void apiBeforeEndpointConsumes() {
-
-    }
-
-    protected void apiAfterEndpointProduces() {
-
-    }
-
-    protected void apiBeforeEndpointProduces() {
-
-    }
-
-
-    protected void apiBeforeIMakeARequestToPath() {
-    }
-
-    protected void apiAfterIMakeARequestToPath() {
-    }
-
-    protected void apiAfterIShouldGetAResponseWithHttpStatusCode() {
-
-    }
-
-    protected void apiBeforeIShouldGetAResponseWithHttpStatusCode() {
-
-    }
+    protected void apiBeforeInit(){}
+    protected void apiAfterInit() {}
+    protected void apiAfterIsUpAndRunning() {}
+    protected void apiBeforeIsUpAndRunning() {}
+    protected void apiAfterIPrepareScenarioNumberInGroup() {}
+    protected void apiBeforeIPrepareScenarioNumberInGroup() {}
+    protected void apiAfterRequestHasHeaderWithNameAndValue() {}
+    protected void apiBeforeRequestHasHeaderWithNameAndValue() {}
+    protected void apiAfterPathParamHasValue() {}
+    protected void apiBeforePathParamHasValue() {}
+    protected void apiAfterHasAQueryParamWithNameAndValue() {}
+    protected void apiBeforeHasAQueryParamWithNameAndValue() {}
+    protected void apiAfterEndpointConsumes() {}
+    protected void apiBeforeEndpointConsumes() {}
+    protected void apiAfterEndpointProduces() {}
+    protected void apiBeforeEndpointProduces() {}
+    protected void apiBeforeIMakeARequestToPath() {}
+    protected void apiAfterIMakeARequestToPath() {}
+    protected void apiAfterIShouldGetAResponseWithHttpStatusCode() {}
+    protected void apiBeforeIShouldGetAResponseWithHttpStatusCode() {}
+    protected void apiBeforeIShouldGetAResponseBody(){}
+    protected void apiAfterIShouldGetAResponseBody(){}
 }
