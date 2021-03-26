@@ -34,7 +34,7 @@ public class Main {
         new Main().start();
     }
 
-    public String getCreateTimestamp(){
+    public String getCreateTimestamp() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         return currentDateTime.format(formatter);
     }
@@ -59,7 +59,7 @@ public class Main {
         final VelocityContext velocityContext = new VelocityContext();
         map.forEach(velocityContext::put);
         map.forEach((s, o) -> {
-            System.out.println(s+"="+o);
+            System.out.println(s + "=" + o);
         });
 
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/pom.xml", "src/main/resources/template/pom.xml.vm");
@@ -90,6 +90,11 @@ public class Main {
         createFile(velocityEngine, velocityContext, OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/testng.xml",
                 "src/main/resources/template/testng.xml.vm");
 
+        testConfig.forEach((apiName, api) -> {
+            api.getEnvironments().forEach(environment -> {
+                new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties").delete();
+            });
+        });
 
         testConfig.forEach((apiName, api) -> {
             velocityContext.put("apiName", apiName);
@@ -105,9 +110,10 @@ public class Main {
                             OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/ApiStepdefs.java.vm");
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
 
             api.getScenarios().forEach(scenario -> {
 
@@ -124,32 +130,32 @@ public class Main {
                     e.printStackTrace();
                 }
 
-                try {
-                    String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
-
-                    if(StringUtils.isNotBlank(scenario.getRequestBody())) {
-                        if (consumes.contains("json")) {
-                            Files.write(Paths.get(requestFile + ".json"), scenario.getRequestBody().getBytes());
-                        } else if (consumes.contains("xml")) {
-                            Files.write(Paths.get(requestFile + ".xml"), scenario.getRequestBody().getBytes());
-                        } else {
-                            Files.write(Paths.get(requestFile + ".txt"), scenario.getRequestBody().getBytes());
-                        }
-                    }
-
-                    String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
-                    if(StringUtils.isNotBlank(scenario.getResponseBody())) {
-                        if (produces.contains("json")) {
-                            Files.write(Paths.get(responseFile + ".json"), scenario.getResponseBody().getBytes());
-                        } else if (produces.contains("xml")) {
-                            Files.write(Paths.get(responseFile + ".xml"), scenario.getResponseBody().getBytes());
-                        } else {
-                            Files.write(Paths.get(responseFile + ".txt"), scenario.getResponseBody().getBytes());
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
+//
+//                    if (StringUtils.isNotBlank(scenario.getRequestBody())) {
+//                        if (consumes.contains("json")) {
+//                            Files.write(Paths.get(requestFile + ".json"), scenario.getRequestBody().getBytes());
+//                        } else if (consumes.contains("xml")) {
+//                            Files.write(Paths.get(requestFile + ".xml"), scenario.getRequestBody().getBytes());
+//                        } else {
+//                            Files.write(Paths.get(requestFile + ".txt"), scenario.getRequestBody().getBytes());
+//                        }
+//                    }
+//
+//                    String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
+//                    if (StringUtils.isNotBlank(scenario.getResponseBody())) {
+//                        if (produces.contains("json")) {
+//                            Files.write(Paths.get(responseFile + ".json"), scenario.getResponseBody().getBytes());
+//                        } else if (produces.contains("xml")) {
+//                            Files.write(Paths.get(responseFile + ".xml"), scenario.getResponseBody().getBytes());
+//                        } else {
+//                            Files.write(Paths.get(responseFile + ".txt"), scenario.getResponseBody().getBytes());
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
                 try {
                     velocityContext.put("scenarioNumber", scenarioNumber);
@@ -174,11 +180,6 @@ public class Main {
             });
 
 
-
-
-            api.getEnvironments().forEach(environment -> {
-                new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties").delete();
-            });
             api.getEnvironments().forEach(environment -> {
                 try {
                     VelocityContext contextForEnv = new VelocityContext();
@@ -186,7 +187,6 @@ public class Main {
                     contextForEnv.put("environment", environment);
                     contextForEnv.put("createTimestamp", getCreateTimestamp());
 
-                    //TODO do not add if it already exists?
                     createFile(velocityEngine, contextForEnv,
                             OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env/config-" + environment.getName() + ".properties",
                             "src/main/resources/template/src/test/resources/config/env/config.properties.vm", true);
@@ -238,8 +238,8 @@ public class Main {
 
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/").mkdirs();
         new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/env").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request").mkdirs();
-        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response").mkdirs();
+//        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request").mkdirs();
+//        new File(OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response").mkdirs();
         System.out.println("Created directories...");
     }
 
@@ -251,76 +251,76 @@ public class Main {
         List<String> errors = new ArrayList<>();
         //validate
         testConfig.forEach((apiName, api) -> {
-            if(!apiName.matches("[a-zA-Z0-9]*")) {
-                errors.add("ApiName can only contain letters and number : "+apiName);
+            if (!apiName.matches("[a-zA-Z0-9]*")) {
+                errors.add("ApiName can only contain letters and number : " + apiName);
             }
 
-            if(api.getEnvironments().size()<1){
+            if (api.getEnvironments().size() < 1) {
                 errors.add("At least 1 envrionemnt should be defined!");
             }
 
             api.getEnvironments().forEach(environment -> {
-                if(StringUtils.isBlank(environment.getName())){
+                if (StringUtils.isBlank(environment.getName())) {
                     errors.add("Environment name cannot be blank!");
                 }
 
-                if(StringUtils.isBlank(environment.getProtocol())){
+                if (StringUtils.isBlank(environment.getProtocol())) {
                     errors.add("Environment protocol cannot be blank!");
                 }
 
-                if(StringUtils.isBlank(environment.getHost())){
+                if (StringUtils.isBlank(environment.getHost())) {
                     errors.add("Environment host cannot be blank!");
                 }
 
-                if(environment.getPort() < 0){
-                    errors.add("Environment port should be a valid number! port : "+environment.getPort());
+                if (environment.getPort() < 0) {
+                    errors.add("Environment port should be a valid number! port : " + environment.getPort());
                 }
             });
 
-            if(api.getScenarios().size() ==0){
+            if (api.getScenarios().size() == 0) {
                 errors.add("At least 1 scenario should be defined!");
             }
 
             AtomicInteger atomicInteger = new AtomicInteger(1);
             api.getScenarios().forEach(scenario -> {
-                if(scenario.getScenarioNumber() == 0){
+                if (scenario.getScenarioNumber() == 0) {
                     scenario.setScenarioNumber(atomicInteger.getAndIncrement());
                 }
 
-                if(StringUtils.isBlank(scenario.getRequestMethod())){
-                    errors.add("Request method cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (StringUtils.isBlank(scenario.getRequestMethod())) {
+                    errors.add("Request method cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
                 }
 
-                if(!httpMethods.contains(scenario.getRequestMethod().toUpperCase())){
-                    errors.add("Request method must be valid! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (!httpMethods.contains(scenario.getRequestMethod().toUpperCase())) {
+                    errors.add("Request method must be valid! ScenarioNumber : " + scenario.getScenarioNumber());
                 }
 
-                if(StringUtils.isBlank(scenario.getContextPath())){
-                    errors.add("ContextPath cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (StringUtils.isBlank(scenario.getContextPath())) {
+                    errors.add("ContextPath cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
                 }
-                if(!scenario.getContextPath().startsWith("/")){
-                    errors.add("ContextPath must start with '/' - ScenarioNumber : "+scenario.getScenarioNumber());
-                }
-
-                if(StringUtils.isBlank(scenario.getProduces())){
-                    errors.add("Scenario produces cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (!scenario.getContextPath().startsWith("/")) {
+                    errors.add("ContextPath must start with '/' - ScenarioNumber : " + scenario.getScenarioNumber());
                 }
 
-                if(StringUtils.isBlank(scenario.getConsumes())){
-                    errors.add("Scenario consumes cannot be blank! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (StringUtils.isBlank(scenario.getProduces())) {
+                    errors.add("Scenario produces cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
                 }
 
-                if(scenario.getResponseStatus()<100 && scenario.getResponseStatus()>=600){
-                    errors.add("Response code must be a valid response code! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (StringUtils.isBlank(scenario.getConsumes())) {
+                    errors.add("Scenario consumes cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
                 }
 
-                if(scenario.getRequestMethod().toUpperCase().equals("GET") && StringUtils.isNotBlank(scenario.getRequestBody())) {
-                    errors.add("GET request should not have a body! ScenarioNumber : "+scenario.getScenarioNumber());
+                if (scenario.getResponseStatus() < 100 && scenario.getResponseStatus() >= 600) {
+                    errors.add("Response code must be a valid response code! ScenarioNumber : " + scenario.getScenarioNumber());
+                }
+
+                if (scenario.getRequestMethod().equalsIgnoreCase("GET") && StringUtils.isNotBlank(scenario.getRequestBody())) {
+                    errors.add("GET request should not have a body! ScenarioNumber : " + scenario.getScenarioNumber());
                 }
             });
         });
 
-        if(errors.size() > 0){
+        if (errors.size() > 0) {
             errors.forEach(System.err::println);
             throw new RuntimeException("Invalid input json file!");
         }
@@ -345,6 +345,6 @@ public class Main {
         t.merge(context, writer);
         writer.flush();
         writer.close();
-        System.out.println("Created : "+outputFile);
+        System.out.println("Created : " + outputFile);
     }
 }

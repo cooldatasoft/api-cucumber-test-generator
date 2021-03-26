@@ -13,6 +13,7 @@ import io.restassured.specification.RequestSpecification;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -53,9 +54,7 @@ public abstract class BaseStepdefs {
     private ContentType contentType;
     private String produces;
     private String requestBody;
-    private Boolean hasRequestBody;
-    private Boolean hasResponseBody;
-    private String sqlScript;
+    private String responseBody;
 
     protected final void init() {
         this.env = System.getProperty("env");
@@ -76,34 +75,11 @@ public abstract class BaseStepdefs {
 
     protected final void thenVerifyResponseBody() {
         try {
-            if (getHasResponseBody()) {
-                String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-                JSONAssert.assertEquals(expectedResponse, response.asString(), false);
+            if (StringUtils.isNotBlank(getResponseBody())) {
+                //String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
+                JSONAssert.assertEquals(getResponseBody(), response.asString(), false);
                 //FIXME Add funtionality to ignore fields when comparing
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected String readAndSetRequestBodyFromFile() {
-        if (getHasRequestBody()) {
-            String requestBody;
-            try {
-                requestBody = IOUtils.resourceToString("/config/request/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-                setRequestBody(requestBody);
-                return requestBody;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return null;
-    }
-
-    protected final void thenVerifyPartOfResponse(JSONObject jsonObject) {
-        try {
-            String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-            JSONAssert.assertEquals(expectedResponse, jsonObject.toString(), false);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -172,8 +148,8 @@ public abstract class BaseStepdefs {
             Scenario scenario = optionalScenario.orElseThrow(() -> new RuntimeException("Invalid Scenario Number : " + getApiName() + " " + getScenarioNumber()));
             setScenarioDescription(scenario.getDescription());
 
-            setHasRequestBody(scenario.getHasRequestBody());
-            setHasResponseBody(scenario.getHasResponseBody());
+            setRequestBody(scenario.getRequestBody());
+            setResponseBody(scenario.getResponseBody());
 
         } else {
             throw new RuntimeException("Invalid Api name : " + getApiName());
@@ -211,20 +187,20 @@ public abstract class BaseStepdefs {
                 setResponse(getRequestSpecification().get(getContextPath()));
                 break;
             case POST:
-                if (getHasRequestBody()) {
-                    getRequestSpecification().body(readAndSetRequestBodyFromFile());
+               if (StringUtils.isNotBlank(getRequestBody())) {
+                    getRequestSpecification().body(getRequestBody());
                 }
                 setResponse(getRequestSpecification().post(getContextPath()));
                 break;
             case DELETE:
-                if (getHasRequestBody()) {
-                    getRequestSpecification().body(readAndSetRequestBodyFromFile());
+                if (StringUtils.isNotBlank(getRequestBody())) {
+                    getRequestSpecification().body(getRequestBody());
                 }
                 setResponse(getRequestSpecification().delete(getContextPath()));
                 break;
             case PUT:
-                if (getHasRequestBody()) {
-                    getRequestSpecification().body(readAndSetRequestBodyFromFile());
+                if (StringUtils.isNotBlank(getRequestBody())) {
+                    getRequestSpecification().body(getRequestBody());
                 }
                 setResponse(getRequestSpecification().put(getContextPath()));
                 break;
