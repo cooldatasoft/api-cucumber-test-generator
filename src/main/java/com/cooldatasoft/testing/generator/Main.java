@@ -124,8 +124,12 @@ public class Main {
                 try {
                     String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
 
-                    FileUtils.copyFile(new File(scenario.getRequestFilePath()), new File(requestFile));
-                    if(StringUtils.isBlank(scenario.getRequestFilePath()) && StringUtils.isNotBlank(scenario.getRequestBody())) {
+                    if(StringUtils.isNotBlank(scenario.getRequestFilePath())){
+                        File requestBodyFile = new File(scenario.getRequestFilePath());
+                        if(requestBodyFile.exists()){
+                            FileUtils.copyFile(requestBodyFile, new File(requestFile));
+                        }
+                    } else if(StringUtils.isBlank(scenario.getRequestFilePath()) && StringUtils.isNotBlank(scenario.getRequestBody())) {
                         if (consumes.contains("json")) {
                             Files.write(Paths.get(requestFile + ".json"), scenario.getRequestBody().getBytes());
                         } else if (consumes.contains("xml")) {
@@ -136,8 +140,13 @@ public class Main {
                     }
 
                     String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
-                    FileUtils.copyFile(new File(scenario.getResponseFilePath()), new File(responseFile));
-                    if(StringUtils.isBlank(scenario.getResponseFilePath()) && StringUtils.isNotBlank(scenario.getResponseBody())) {
+
+                    if(StringUtils.isNotBlank(scenario.getResponseFilePath())){
+                        File responseBodyFile = new File(scenario.getResponseFilePath());
+                        if(responseBodyFile.exists()){
+                            FileUtils.copyFile(responseBodyFile, new File(responseFile));
+                        }
+                    }else if(StringUtils.isBlank(scenario.getResponseFilePath()) && StringUtils.isNotBlank(scenario.getResponseBody())) {
                         if (produces.contains("json")) {
                             Files.write(Paths.get(responseFile + ".json"), scenario.getResponseBody().getBytes());
                         } else if (produces.contains("xml")) {
