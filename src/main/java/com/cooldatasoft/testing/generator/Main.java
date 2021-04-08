@@ -122,6 +122,36 @@ public class Main {
                 String produces = scenario.getProduces();
 
                 try {
+                    String requestFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/request/" + apiName + scenarioNumber;
+
+                    FileUtils.copyFile(new File(scenario.getRequestFilePath()), new File(requestFile));
+                    if(StringUtils.isBlank(scenario.getRequestFilePath()) && StringUtils.isNotBlank(scenario.getRequestBody())) {
+                        if (consumes.contains("json")) {
+                            Files.write(Paths.get(requestFile + ".json"), scenario.getRequestBody().getBytes());
+                        } else if (consumes.contains("xml")) {
+                            Files.write(Paths.get(requestFile + ".xml"), scenario.getRequestBody().getBytes());
+                        } else {
+                            Files.write(Paths.get(requestFile + ".txt"), scenario.getRequestBody().getBytes());
+                        }
+                    }
+
+                    String responseFile = OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/config/response/" + apiName + scenarioNumber;
+                    FileUtils.copyFile(new File(scenario.getResponseFilePath()), new File(responseFile));
+                    if(StringUtils.isBlank(scenario.getResponseFilePath()) && StringUtils.isNotBlank(scenario.getResponseBody())) {
+                        if (produces.contains("json")) {
+                            Files.write(Paths.get(responseFile + ".json"), scenario.getResponseBody().getBytes());
+                        } else if (produces.contains("xml")) {
+                            Files.write(Paths.get(responseFile + ".xml"), scenario.getResponseBody().getBytes());
+                        } else {
+                            Files.write(Paths.get(responseFile + ".txt"), scenario.getResponseBody().getBytes());
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
                     velocityContext.put("scenario", scenario);
                     createFile(velocityEngine, velocityContext,
                             OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/resources/features/" + apiName + scenarioNumber + ".feature",

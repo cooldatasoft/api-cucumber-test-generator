@@ -17,6 +17,10 @@ public class Scenario {
 
     private String requestBody;
     private String responseBody;
+
+    private String requestFilePath;
+    private String responseFilePath;
+
     private int responseStatus;
 
     private Map<String, String> headers;
