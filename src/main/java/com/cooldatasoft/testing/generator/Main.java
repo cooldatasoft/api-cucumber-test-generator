@@ -239,6 +239,9 @@ public class Main {
                 OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/data/TestConfig.java",
                 "src/main/resources/template/src/test/java/basePackage/data/TestConfig.java.vm");
 
+        createFile(velocityEngine, velocityContext,
+                OUTPUT_PATH + MAVEN_ARTIFACT_ID + "/src/test/java/" + basePackagePath + "/util/ObjectStore.java",
+                "src/main/resources/template/src/test/java/basePackage/util/ObjectStore.java.vm");
     }
 
     private void createDirectories(String basePackagePath) {
