@@ -1,17 +1,66 @@
 package ${basePackage}.util;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Created : ${createTimestamp}
+ *
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
+@Slf4j
 public class ObjectStore {
 
-    private static final Map<String, Object> OBJECT_STORE = new ConcurrentHashMap<>();
+    public static final String OBJECT_STORE_FILE = "target/objectStore.ser";
+    private static final Map<String, Object> OBJECT_STORE = readObjectStore();
 
-    public static void putObject(String key, Object object) {
+    public static void put(String key, Object object) {
         OBJECT_STORE.put(key, object);
+        writeObjectStore();
     }
 
-    public static Object getObject(String key) {
+    public static Object get(String key) {
         return OBJECT_STORE.get(key);
+    }
+
+    public static Object containsKey(String key) {
+        return OBJECT_STORE.containsKey(key);
+    }
+
+    public static void clear() {
+        OBJECT_STORE.clear();
+        writeObjectStore();
+    }
+
+    private static void writeObjectStore() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("target/objectStore.ser");
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(OBJECT_STORE);
+            objectOut.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static Map<String, Object> readObjectStore() {
+        Map<String, Object> objectStore = new ConcurrentHashMap<>();
+        try {
+            FileInputStream fi = new FileInputStream(OBJECT_STORE_FILE);
+            ObjectInputStream oi = new ObjectInputStream(fi);
+            objectStore = (Map<String, Object>) oi.readObject();
+            oi.close();
+            fi.close();
+        } catch (FileNotFoundException e) {
+            log.warn("ObjectStore file does not exist! Initialazing  a fresh Object Store.");
+        } catch (IOException | ClassNotFoundException e) {
+           e.printStackTrace();
+        }
+
+        return objectStore;
     }
 }
