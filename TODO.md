@@ -7,7 +7,6 @@ TODO
 
 
 * Ignore selective fields when doing response verification
-* Add request & response body into input.json
 * Use swagger to discover endpoints
 * use hateoas to discover endpoints
 * use postman export json
