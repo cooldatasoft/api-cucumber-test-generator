@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created : ${createTimestamp} -->
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="Cucumber Framework" parallel="classes" thread-count="2" >
+<suite name="Cucumber Framework" parallel="classes" thread-count="1" >
     <test name="Cucumber Tests">
         <classes>
 
