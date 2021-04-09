@@ -38,8 +38,10 @@ Sample input format
           "to": "USD",
           "amount": "1"
         },
-        "hasRequestBody": "true",
-        "hasResponseBody": "true",
+        "requestBody": "{}",
+        "responseBody": "{}",
+        "requestFilePath": "/a/b/c/request/case01.json",
+        "responseFilePath": "/a/b/c/response/case01.json",
         "responseStatus": 200
       }
     ]

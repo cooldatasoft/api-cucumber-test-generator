@@ -12,3 +12,4 @@ TODO
 * use hateoas to discover endpoints
 * use postman export json
 * checktstyle into template
+* UI for generating the input.json
