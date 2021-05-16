@@ -21,19 +21,25 @@ public class ObjectStore {
     public static void put(String key, Object object) {
         OBJECT_STORE.put(key, object);
         writeObjectStore();
+        log.info("Putting into object store {}={}", key, object);
     }
 
     public static Object get(String key) {
-        return OBJECT_STORE.get(key);
+        Object object = OBJECT_STORE.get(key);
+        log.info("Retrieving from object store {}={}", key, object);
+        return object;
     }
 
     public static Object containsKey(String key) {
-        return OBJECT_STORE.containsKey(key);
+        boolean result = OBJECT_STORE.containsKey(key);
+        log.info("Checking if object store contains key {}={}", key, result);
+        return result;
     }
 
     public static void clear() {
         OBJECT_STORE.clear();
         writeObjectStore();
+        log.info("Cleared object store!");
     }
 
     private static void writeObjectStore() {

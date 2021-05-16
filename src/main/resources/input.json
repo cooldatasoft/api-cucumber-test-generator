@@ -1,201 +1,85 @@
 {
-  "CurrencyApi": {
-    "description": "Currency API",
+  "LEM": {
+    "description": "LEM API",
     "environments": [
       {
         "name": "dev",
-        "protocol": "http",
-        "host": "data.fixer.io",
-        "port": 80
+        "protocol": "https",
+        "host": "gbl04901.systems.uk.hsbc",
+        "port": 10005
       },
       {
         "name": "ci",
-        "protocol": "http",
-        "host": "data.fixer.io",
-        "port": 80
+        "protocol": "https",
+        "host": "gbl04901.systems.uk.hsbc",
+        "port": 10005
       }
     ],
     "scenarios": [
       {
         "scenarioNumber": 1,
-        "groupName": "application",
+        "groupName": "scenario",
         "requestMethod": "GET",
-        "contextPath": "/api/latest",
-        "description": "getting latest rates",
+        "contextPath": "/sites-parties",
+        "description": "Get party and  site mapping",
         "consumes": "application/json",
         "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "symbols": "GBP,EUR,TRY"
-        },
-        "responseBody": "{\"key\":\"value\"}",
+        "responseFilePath": "C:\\projects\\lem-api-tests\\src\\test\\resources\\config\\response\\LEM1.json",
+        "responseBody": "true",
         "responseStatus": 200
       },
       {
         "scenarioNumber": 2,
-        "groupName": "application",
-        "requestMethod": "GET",
-        "contextPath": "/api/symbols",
-        "description": "get available symbols",
+        "groupName": "scenario",
+        "requestMethod": "POST",
+        "contextPath": "/sites-parties",
+        "description": "Get party and site mapping using incorrect HTTP method",
         "consumes": "application/json",
         "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855"
-        },
-        "responseBody": "{\"key\":\"value\"}",
-        "responseStatus": 200
+        "responseFilePath": "C:\\projects\\lem-api-tests\\src\\test\\resources\\config\\response\\LEM2.json",
+        "responseBody": "false",
+        "responseStatus": 500
       },
       {
         "scenarioNumber": 3,
-        "groupName": "application",
+        "groupName": "scenario",
         "requestMethod": "GET",
-        "contextPath": "/api/{date}",
-        "description": "testing adding customer",
+        "contextPath": "/sites-parties",
+        "description": "User has some site access rights can get corresponding site from backend",
         "consumes": "application/json",
         "produces": "application/json",
-        "pathParams": {
-          "date": "2013-12-24"
-        },
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "base": "GBP",
-          "symbols": "TRY,USD"
-        },
-        "responseBody": "{\"key\":\"value\"}",
-        "responseStatus": 200
-      },
-      {
-        "scenarioNumber": 4,
-        "groupName": "application",
-        "requestMethod": "GET",
-        "contextPath": "/api/convert",
-        "description": "Convert rates",
-        "consumes": "application/json",
-        "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "from": "GBP",
-          "to": "TRY",
-          "amount": "1"
-        },
-        "responseBody": "{\"key\":\"value\"}",
+        "responseFilePath": "C:\\projects\\lem-api-tests\\src\\test\\resources\\config\\response\\LEM3.json",
+        "responseBody": "true",
         "responseStatus": 200
       },
       {
         "scenarioNumber": 5,
-        "groupName": "application",
+        "groupName": "scenario",
         "requestMethod": "GET",
-        "contextPath": "/api/timeseries",
-        "description": "Convert rates",
+        "contextPath": "/sites-parties",
+        "description": "Get party and site mapping using incorrect access right",
         "consumes": "application/json",
         "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "start_date": "2012-05-01",
-          "end_date": "2012-05-25"
-        },
-        "responseBody": "{\"key\":\"value\"}",
-        "responseStatus": 200
-      }
-    ]
-  },
-
-  "OtherCurrencyApi": {
-    "description": "Other Currency API",
-    "environments": [
-      {
-        "name": "dev",
-        "protocol": "http",
-        "host": "data.fixer.io",
-        "port": 80
-      },
-      {
-        "name": "ci",
-        "protocol": "http",
-        "host": "data.fixer.io",
-        "port": 80
-      }
-    ],
-    "scenarios": [
-      {
-        "scenarioNumber": 1,
-        "groupName": "application",
-        "requestMethod": "GET",
-        "contextPath": "/api/latest",
-        "description": "Other get latest",
-        "consumes": "application/json",
-        "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "symbols": "GBP,EUR,TRY"
-        },
-        "responseBody": "{\"key\":\"value\"}",
+        "responseFilePath": "C:\\projects\\lem-api-tests\\src\\test\\resources\\config\\response\\LEM5.json",
+        "responseBody": "true",
         "responseStatus": 200
       },
       {
-        "scenarioNumber": 2,
-        "groupName": "application",
+        "scenarioNumber": 6,
+        "groupName": "scenario",
         "requestMethod": "GET",
-        "contextPath": "/api/symbols",
-        "description": "Other symbols",
+        "contextPath": "/cpty-alias/{party_id}/{page_num}",
+        "description": "Get Counterparty Index using keyword for given party",
         "consumes": "application/json",
         "produces": "application/json",
         "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855"
+          "keyword":"BBIB"
         },
-        "responseBody": "{\"key\":\"value\"}",
-        "responseStatus": 200
-      },
-      {
-        "scenarioNumber": 3,
-        "groupName": "application",
-        "requestMethod": "GET",
-        "contextPath": "/api/{date}",
-        "description": "Other date",
-        "consumes": "application/json",
-        "produces": "application/json",
         "pathParams": {
-          "date": "2013-12-24"
+          "party_id":"74","page_num":"1"
         },
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "base": "GBP",
-          "symbols": "TRY,USD"
-        },
-        "responseBody": "{\"key\":\"value\"}",
-        "responseStatus": 200
-      },
-      {
-        "scenarioNumber": 4,
-        "groupName": "application",
-        "requestMethod": "GET",
-        "contextPath": "/api/convert",
-        "description": "Other Convert rates",
-        "consumes": "application/json",
-        "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "from": "GBP",
-          "to": "TRY",
-          "amount": "1"
-        },
-        "responseBody": "{\"key\":\"value\"}",
-        "responseStatus": 200
-      },
-      {
-        "scenarioNumber": 5,
-        "groupName": "application",
-        "requestMethod": "GET",
-        "contextPath": "/api/timeseries",
-        "description": "Other Convert rates",
-        "consumes": "application/json",
-        "produces": "application/json",
-        "queryParams": {
-          "access_key": "41d82645b6833cbcb1e30ab643ccc855",
-          "start_date": "2012-05-01",
-          "end_date": "2012-05-25"
-        },
-        "responseBody": "{\"key\":\"value\"}",
+        "responseFilePath": "C:\\projects\\lem-api-tests\\src\\test\\resources\\config\\response\\LEM6.json",
+        "responseBody": "true",
         "responseStatus": 200
       }
     ]

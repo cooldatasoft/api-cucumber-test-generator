@@ -38,7 +38,17 @@ Sample input format
           "to": "USD",
           "amount": "1"
         },
+        "pathParams": {
+          "pathParam1":"pathParamValue1",
+          "pathParam2":"pathParamValue2"
+        },
+        "headers": {
+          "headerName1":"headerValue1",
+          "headerName2":"headerValue2"
+        },
+        //either requestBody or requestFilePath
         "requestBody": "{}",
+        //either responseBody or responseFilePath
         "responseBody": "{}",
         "requestFilePath": "/a/b/c/request/case01.json",
         "responseFilePath": "/a/b/c/response/case01.json",
