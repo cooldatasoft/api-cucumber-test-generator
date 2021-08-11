@@ -1,6 +1,0 @@
-#set( $dot = "." )
-#Added Config : ${createTimestamp}
-${apiName}${dot}protocol=$environment.protocol
-${apiName}${dot}host=$environment.host
-${apiName}${dot}port=$environment.port
-

@@ -1,24 +1,33 @@
 #set( $underscore = "_" )
-# Created : ${createTimestamp}
+#Don't change this  file directly or it will get overriden
 Feature: $api.description - $scenario.description
 
-@$apiName
-@$scenario.groupName
-@$apiName$underscore$scenario.scenarioNumber
-Scenario: $scenario.description $scenario.scenarioNumber
-Given "$apiName" is up and running
-And I prepare scenario number "$scenario.scenarioNumber" in group "$scenario.groupName"
+#if($scenario.ignore)
+  @Ignore
+#end
+  @$apiName
+  @$scenario.groupName
+  @$apiName$underscore$scenario.scenarioNumber
+  Scenario: $scenario.description $scenario.scenarioNumber
+    Given "$apiName" is up and running
+    And I prepare scenario number "$scenario.scenarioNumber" in group "$scenario.groupName"
 #foreach ($mapEntry in $scenario.headers.entrySet())
-And request has header with name "$mapEntry.key" and value "$mapEntry.value"
+    And request has header with name "$mapEntry.key" and value "$mapEntry.value"
 #end
 #foreach ($mapEntry in $scenario.pathParams.entrySet())
-And path param "$mapEntry.key" has value "$mapEntry.value"
+    And path param "$mapEntry.key" has value "$mapEntry.value"
 #end
 #foreach ($mapEntry in $scenario.queryParams.entrySet())
-And has a query param with name "$mapEntry.key" and value "$mapEntry.value"
+    And has a query param with name "$mapEntry.key" and value "$mapEntry.value"
 #end
-And endpoint consumes "$scenario.consumes"
-And endpoint produces "$scenario.produces"
-When I make a "$scenario.requestMethod" request to path "$scenario.contextPath"
-Then I should get a response with http status code "$scenario.responseStatus"
-And I should get a response body
+#if($scenario.hasRequestBody)
+    And endpoint consumes "$scenario.consumes"
+#end
+#if($scenario.hasResponseBody)
+    And endpoint produces "$scenario.produces"
+#end
+    When I make a "$scenario.requestMethod" request to path "$scenario.contextPath"
+    Then I should get a response with http status code "$scenario.responseStatus"
+#if($scenario.hasResponseBody)
+    And I should get a response body
+#end

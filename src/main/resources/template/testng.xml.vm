@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created : ${createTimestamp} -->
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Cucumber Framework" parallel="classes" thread-count="1" >
     <test name="Cucumber Tests">
         <classes>
+            <!-- The order is important so changing the order might causes failures -->
 
             #foreach($runner in $runners)
-            <class name="${basePackage}.runner.RunCukeIT${runner}"/>
+            <class name="${runner}"/>
             #end
 
         </classes>

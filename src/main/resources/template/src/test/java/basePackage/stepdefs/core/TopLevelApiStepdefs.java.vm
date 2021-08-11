@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import ${basePackage}.stepdefs.${capitalizedApiName}${scenarioNumber}Stepdefs;
 
 /**
- * Created : ${createTimestamp}
  *
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */

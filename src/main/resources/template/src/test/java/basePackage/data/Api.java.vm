@@ -5,7 +5,6 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Created : ${createTimestamp}
  *
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */

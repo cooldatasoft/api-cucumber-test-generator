@@ -1,12 +1,12 @@
 package ${basePackage}.base;
 
-import ${basePackage}.config.Config;
-import ${basePackage}.data.Api;
-import ${basePackage}.data.Scenario;
-import ${basePackage}.data.TestConfig;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cooldatasoft.testing.config.Config;
+import com.cooldatasoft.testing.data.Api;
+import com.cooldatasoft.testing.data.InputJson;
+import com.cooldatasoft.testing.data.Scenario;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -14,9 +14,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Created : ${createTimestamp}
  *
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */
@@ -51,10 +50,12 @@ public abstract class BaseStepdefs {
     private int port;
     private String contextPath = "";
     private Method requestMethod;
-    private ContentType contentType;
+    private String contentType;
     private String produces;
     private String requestBody;
     private String responseBody;
+    private HashMap<String, String> formDataMap;
+    private HashMap<String, File> formDataFileMap;
 
     protected final void init() {
         this.env = System.getProperty("env");
@@ -122,7 +123,7 @@ public abstract class BaseStepdefs {
     }
 
     public void endpointConsumes(String consumes) {
-        setContentType(ContentType.fromContentType(consumes));
+        setContentType(consumes);
     }
 
     public void endpointProduces(String produces) {
@@ -136,10 +137,10 @@ public abstract class BaseStepdefs {
         ObjectMapper objectMapper = new ObjectMapper();
 
         String testCasesStr = IOUtils.resourceToString("/config/test-config.json", StandardCharsets.UTF_8);
-        TestConfig apiTestConfig = objectMapper.readValue(testCasesStr, TestConfig.class);
+        InputJson apiTestConfig = objectMapper.readValue(testCasesStr, InputJson.class);
 
-        if (apiTestConfig.containsKey(getApiName())) {
-            Api api = apiTestConfig.get(getApiName());
+        if (apiTestConfig.getApiMap().containsKey(getApiName())) {
+            Api api = apiTestConfig.getApiMap().get(getApiName());
 
             Optional<Scenario> optionalScenario = api.getScenarios().stream()
                     .filter(scenario -> scenario.getScenarioNumber() == getScenarioNumber())
@@ -148,8 +149,17 @@ public abstract class BaseStepdefs {
             Scenario scenario = optionalScenario.orElseThrow(() -> new RuntimeException("Invalid Scenario Number : " + getApiName() + " " + getScenarioNumber()));
             setScenarioDescription(scenario.getDescription());
 
-            setRequestBody(scenario.getRequestBody());
-            setResponseBody(scenario.getResponseBody());
+           if(scenario.getHasRequestBody()) {
+               String requestFileContent =  IOUtils.resourceToString(scenario.getRequestFilePath(), StandardCharsets.UTF_8);
+               //String requestFileContent = FileUtils.readFileToString(new File(scenario.getRequestFilePath()), Charset.forName("UTF-8"));
+               setRequestBody(requestFileContent);
+           }
+
+           if(scenario.getHasResponseBody()) {
+               String responseFileContent = IOUtils.resourceToString(scenario.getResponseFilePath(), StandardCharsets.UTF_8);
+               //String responseFileContent = FileUtils.readFileToString(new File(scenario.getResponseFilePath()), Charset.forName("UTF-8"));
+               setResponseBody(responseFileContent);
+           }
 
         } else {
             throw new RuntimeException("Invalid Api name : " + getApiName());
@@ -160,12 +170,16 @@ public abstract class BaseStepdefs {
         assertThat(getProtocol(), is(notNullValue()));
         assertThat(getHost(), is(notNullValue()));
         assertThat(getPort(), is(notNullValue()));
-        assertThat(getContentType(), is(notNullValue()));
+        if(!"GET".equalsIgnoreCase(requestMethod)) {
+            assertThat(getContentType(), is(notNullValue()));
+        }
 
         RestAssured.baseURI = getProtocol() + "://" + getHost() + ":" + getPort();
         RestAssured.useRelaxedHTTPSValidation();
         setRequestSpecification(RestAssured.given());
-        getHeaders().put(CONTENT_TYPE, getContentType().toString());
+        if(!"GET".equalsIgnoreCase(requestMethod)) {
+            getHeaders().put(CONTENT_TYPE, getContentType().toString());
+        }
 
         getRequestSpecification().headers(getHeaders());
         getRequestSpecification().pathParams(getPathParams());
@@ -189,6 +203,14 @@ public abstract class BaseStepdefs {
             case POST:
                if (StringUtils.isNotBlank(getRequestBody())) {
                     getRequestSpecification().body(getRequestBody());
+                }
+               if (getFormDataMap() != null && !getFormDataMap().isEmpty()) {
+                   getRequestSpecification().formParams(getFormDataMap());
+               }
+               if (getFormDataFileMap() != null && !getFormDataFileMap().isEmpty()) {
+                   for(String key : getFormDataFileMap().keySet()){
+                       getRequestSpecification().multiPart(key, getFormDataFileMap().get(key));
+                   }
                 }
                 setResponse(getRequestSpecification().post(getContextPath()));
                 break;

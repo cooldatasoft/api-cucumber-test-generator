@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created : ${createTimestamp} -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -9,46 +8,42 @@
     <artifactId>$artifactId</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <properties>
+     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <cucumber.version>6.10.0</cucumber.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <cucumber.version>6.10.4</cucumber.version>
         <extentreports-cucumber6-adapter.version>2.6.0</extentreports-cucumber6-adapter.version>
-        <webdrivermanager.version>3.8.1</webdrivermanager.version>
-        <selenium-java.version>3.141.59</selenium-java.version>
         <lombok.version>1.18.18</lombok.version>
-        <jackson.version>2.12.1</jackson.version>
-        <rest-assured.version>4.3.3</rest-assured.version>
+        <jackson.version>2.12.4</jackson.version>
+        <rest-assured.version>4.4.0</rest-assured.version>
         <logback-classic.version>1.2.3</logback-classic.version>
-        <slf4j.version>1.7.30</slf4j.version>
+        <slf4j.version>1.7.32</slf4j.version>
         <jsonassert.version>1.5.0</jsonassert.version>
-         <cluecumber-report.version>2.6.1</cluecumber-report.version>
+        <cluecumber-report.version>2.6.1</cluecumber-report.version>
     </properties>
 
     <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.testng/testng -->
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>7.4.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.cucumber</groupId>
-                <artifactId>cucumber-testng</artifactId>
-                <version>${cucumber.version}</version>
-                <scope>test</scope>
-            </dependency>
-
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>tech.grasshopper</groupId>
             <artifactId>extentreports-cucumber6-adapter</artifactId>
             <version>${extentreports-cucumber6-adapter.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -61,18 +56,10 @@
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>${webdrivermanager.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium-java.version}</version>
-            <scope>test</scope>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -80,32 +67,35 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>${rest-assured.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -119,33 +109,30 @@
             <version>${rest-assured.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.skyscreamer</groupId>
             <artifactId>jsonassert</artifactId>
             <version>${jsonassert.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${logback-classic.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-classic.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -174,7 +161,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>com.trivago.rta</groupId>
                 <artifactId>cluecumber-report-plugin</artifactId>
@@ -194,9 +180,7 @@
                     <expandBeforeAfterHooks>true</expandBeforeAfterHooks>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 
 </project>

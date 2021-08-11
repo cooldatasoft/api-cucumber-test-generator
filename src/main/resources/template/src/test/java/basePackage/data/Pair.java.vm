@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * Created : ${createTimestamp}
  *
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */

@@ -15,13 +15,14 @@ public class Scenario {
     private String consumes;
     private String produces;
 
-    private String requestBody;
-    private String responseBody;
+    private Boolean hasRequestBody;
+    private Boolean hasResponseBody;
 
     private String requestFilePath;
     private String responseFilePath;
 
     private int responseStatus;
+    private boolean ignore;
 
     private Map<String, String> headers;
     private Map<String, String> pathParams;
