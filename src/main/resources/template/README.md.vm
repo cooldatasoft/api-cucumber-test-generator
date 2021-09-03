@@ -1,0 +1,135 @@
+# Pre-requisites
+
+##IDE Setup
+
+###Lombok
+
+
+## How to Run
+
+
+* You need to have lombok plugin installed for you IDE (intellij/eclipse) to be able to compile the code inside the IDE
+* Command line maven compilation does not require anything special. 'mvn clean verify' will run all the tests
+
+
+## Running against different Environments
+
+* Environment specific information is kept in src/test/resources/env/*.properties files.
+* The default one is named config-dev.properties and is called the dev environemnt
+* You can add multiple environments by adding a different properties file. The format of the naming must be 
+config-{envName}.properties.
+* To run the tests against a specific environment you need to pass the env name as env paramater. 
+eg. mvn clean verify -Denv=staging for config-staging.properties
+
+####Tech Stack:
+* Java
+* Cucumber
+* Rest Assured
+* Lombok
+* TestNG
+* slf4j
+
+
+## File Description
+
+
+#### Base folder & Config folder & Util folder:
+* BaseStepdefs: Contains core public methods
+* Config: Utility class that load the environment specific config. 
+* ObjectStore: write or read data to disk so data can be exchanged between different tests
+
+#### Data folder
+* POJO classes representing the data structure in the test-config.json
+
+#### Runner folder:
+* Cucumber runner classes to run the specific feature files
+  
+#### Stepdefs folder:
+* _ApiStepdefs: Location for custom code that needs to run before/after each scenario of this API at specific steps
+* _Stepdefs: Location for custom code that needs to run before/after a specific scenario at specific steps
+
+#### Request folder:
+* Contains the request body for each scenario that requires a body for the request
+
+#### Response folder:
+* Contains the expected responses for each scenario if a response body is expected
+
+#### Env folder:
+* config-dev.properties: configuration items for the project (default)
+
+#### Features folder:
+* Contains all the feature files for all the scenarios defined
+  
+#### Others:
+* Jenkinsfile: configuration file for a Jenkins pipeline
+* testng.xml: configures the runner classes. The ordering is important if you want to run a specific test before the others.
+* test-config.json: define all properties for the entire project and for all cases `This is a very very very important file` 
+You can regenerate the whole project only from this file (excluding any customizations done)
+
+
+## How to create a Case
+
+
+* To add new cases in the test-config.json, refer to the code below
+```json
+{
+  "config" : {
+    "outputPath" : "c:/workspace/",
+    "mavenGroupId" : "com.cooldatasoft.testing",
+    "mavenArtifactId" : "frtbsa-adjustment-api-tests"
+  },
+  "apiMap" : {
+    "adjustmentApi" : {
+      "description" : "adjustmentApi API",
+      "environments" : [ {
+        "name" : "dev",
+        "protocol" : "https",
+        "host" : "localhost",
+        "port" : 8080
+      } ],
+      "scenarios" : [
+        {
+          "scenarioNumber": 1,
+          "groupName": "application",
+          "requestMethod": "GET",
+          "contextPath": "/api/convert/{pathParam1}",
+          "description": "testing adding customer",
+          "consumes": "application/json",
+          "produces": "application/json",
+          "queryParams": {
+            "access_key": "ACCESS_KEY",
+            "from": "GBP",
+            "to": "USD",
+            "amount": "1"
+          },
+          "pathParams": {
+            "pathParam1":"pathParamValue1",
+            "pathParam2":"pathParamValue2"
+          },
+          "headers": {
+            "headerName1":"headerValue1",
+            "headerName2":"headerValue2"
+          },
+          "hasRequestBody": false,
+          "hasResponseBody": true,
+          "responseStatus": 200,
+          "ignore": false
+        }
+      ]
+    }
+  }
+}
+```
+* Use the generator project to generate the corresponding code. Some classes are overriden and some classes are not. Make sure you change only the classes that are not overriden.
+* Copy the code for the new cases to the appropriate place in this project
+* Set the appropriate request body parameters and expected response body (Empty files will be created in the project so you can copy request/response body)
+* Change the order of execution in the testng.xml file, if necessary
+
+## How to maintain
+
+* If the API properties change, the properties in the test-config.json needs to be updated and project needs to be regenerated
+
+## How to view the Report
+
+* Open the ExtentSpark.html file using a browser, the file path is "target/test-output/Spark/ExtentSpark.html"
+

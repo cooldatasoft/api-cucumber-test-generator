@@ -1,0 +1,68 @@
+pipeline {
+    agent { label 'cm-linux' }
+
+    options {
+        timeout(time : 4, unit: 'HOURS')
+        disableConcurrentBuilds()
+    }
+
+    triggers {
+        githubPush ()
+
+    }
+
+    tools {
+        maven 'maven_3.3.3'
+    }
+
+    stages {
+
+        stage('Run test') {
+            steps{
+                sh "mvn clean verify sonar:sonar"
+            }
+        }
+    }
+
+     post {
+        always {
+            script {
+               def extentReport = readJSON file: 'target/test-output/Json/ExtentJson.json'
+
+               int executed=0
+               int passed=0
+               int failed=0
+               int skipped=0
+
+               extentReport.each { feature ->
+                    feature.children.each { scenario ->
+                         if (scenario.status.equals("PASS")) {
+                            passed++
+                            executed++
+                        } else if(scenario.status.equals("FAIL")) {
+                             failed++
+                             executed++
+                        } else if(scenario.status.equals("SKIPPED")) {
+                           skipped++
+                        }
+                    }
+               }
+
+                def vtfJson = "{ 'executed' : " + executed + "," +
+                                "'passed' : " + passed + "," +
+                                "'failed' : " + failed + "," +
+                                "'skipped' : " + skipped + "}";
+
+               println("VTF : " + vtfJson);
+               writeJSON file: 'target/vtf_counter.json', json: vtfJson
+               ansiColor('xterm') {
+               sh '''
+                   unzip -o /build_tools/VTF_TestAutomation/vtf_test_automation_et_1.0.1.zip
+                   chmod 0775 VtfFreestyle.sh
+                   ./VtfFreestyle.sh "target/vtf_counter.json" "Selenium" "Testing" "Smoke Testing" "High"
+               '''
+               }
+            }
+        }
+     }
+}

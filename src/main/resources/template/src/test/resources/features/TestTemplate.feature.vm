@@ -1,12 +1,14 @@
 #set( $underscore = "_" )
-#Don't change this  file directly or it will get overriden
+#Don't change this  file directly or it will get OVERRIDEN
 Feature: $api.description - $scenario.description
 
 #if($scenario.ignore)
   @Ignore
 #end
+#foreach ($groupName in $scenario.groupNames)
+  @$groupName
+#end
   @$apiName
-  @$scenario.groupName
   @$apiName$underscore$scenario.scenarioNumber
   Scenario: $scenario.description $scenario.scenarioNumber
     Given "$apiName" is up and running

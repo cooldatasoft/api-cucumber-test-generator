@@ -1,12 +1,12 @@
 package ${basePackage}.base;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.cooldatasoft.testing.config.Config;
 import com.cooldatasoft.testing.data.Api;
 import com.cooldatasoft.testing.data.InputJson;
 import com.cooldatasoft.testing.data.Scenario;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -24,6 +24,8 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -52,7 +54,9 @@ public abstract class BaseStepdefs {
     private Method requestMethod;
     private String contentType;
     private String produces;
+    //request body
     private String requestBody;
+    //Expected response body
     private String responseBody;
     private HashMap<String, String> formDataMap;
     private HashMap<String, File> formDataFileMap;
@@ -76,10 +80,14 @@ public abstract class BaseStepdefs {
 
     protected final void thenVerifyResponseBody() {
         try {
-            if (StringUtils.isNotBlank(getResponseBody())) {
-                //String expectedResponse = IOUtils.resourceToString("/config/response/" + getApiName() + getScenarioNumber() + ".json", StandardCharsets.UTF_8);
-                JSONAssert.assertEquals(getResponseBody(), response.asString(), false);
-                //FIXME Add funtionality to ignore fields when comparing
+            if (StringUtils.isBlank(getResponseBody())) {
+                assertTrue(StringUtils.isBlank(response.asString()));
+            } else {
+                if (ContentType.JSON.matches(getProduces())) {
+                    JSONAssert.assertEquals(getResponseBody(), response.asString(), false);
+                } else {
+                    assertTrue(getResponseBody().equalsIgnoreCase(response.asString()));
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -142,7 +150,7 @@ public abstract class BaseStepdefs {
         if (apiTestConfig.getApiMap().containsKey(getApiName())) {
             Api api = apiTestConfig.getApiMap().get(getApiName());
 
-            Optional<Scenario> optionalScenario = api.getScenarios().stream()
+            Optional<Scenario> optionalScenario = api.getScenarios().parallelStream()
                     .filter(scenario -> scenario.getScenarioNumber() == getScenarioNumber())
                     .findFirst();
 
@@ -151,7 +159,6 @@ public abstract class BaseStepdefs {
 
            if(scenario.getHasRequestBody()) {
                String requestFileContent =  IOUtils.resourceToString(scenario.getRequestFilePath(), StandardCharsets.UTF_8);
-               //String requestFileContent = FileUtils.readFileToString(new File(scenario.getRequestFilePath()), Charset.forName("UTF-8"));
                setRequestBody(requestFileContent);
            }
 
@@ -170,16 +177,15 @@ public abstract class BaseStepdefs {
         assertThat(getProtocol(), is(notNullValue()));
         assertThat(getHost(), is(notNullValue()));
         assertThat(getPort(), is(notNullValue()));
-        if(!"GET".equalsIgnoreCase(requestMethod)) {
+
+        if(!"GET".equalsIgnoreCase(requestMethod) && StringUtils.isNotBlank(getRequestBody()) ) {
             assertThat(getContentType(), is(notNullValue()));
+            getHeaders().put(CONTENT_TYPE, getContentType());
         }
 
         RestAssured.baseURI = getProtocol() + "://" + getHost() + ":" + getPort();
         RestAssured.useRelaxedHTTPSValidation();
         setRequestSpecification(RestAssured.given());
-        if(!"GET".equalsIgnoreCase(requestMethod)) {
-            getHeaders().put(CONTENT_TYPE, getContentType().toString());
-        }
 
         getRequestSpecification().headers(getHeaders());
         getRequestSpecification().pathParams(getPathParams());
@@ -203,7 +209,7 @@ public abstract class BaseStepdefs {
             case POST:
                if (StringUtils.isNotBlank(getRequestBody())) {
                     getRequestSpecification().body(getRequestBody());
-                }
+               }
                if (getFormDataMap() != null && !getFormDataMap().isEmpty()) {
                    getRequestSpecification().formParams(getFormDataMap());
                }
@@ -227,7 +233,7 @@ public abstract class BaseStepdefs {
                 setResponse(getRequestSpecification().put(getContextPath()));
                 break;
             default:
-                throw new RuntimeException("Method not implemented : " + getRequestMethod());
+                throw new RuntimeException("Unknown HTTP Method : " + getRequestMethod());
         }
 
         log.info("*****************************************************************************************");

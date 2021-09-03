@@ -23,8 +23,6 @@
 hs_err_pid*
 
 
-test-output/
-test-report/
 .idea/
 target/
 *.iml

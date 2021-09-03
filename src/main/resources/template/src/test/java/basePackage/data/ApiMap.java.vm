@@ -1,0 +1,15 @@
+package ${basePackage}.data;
+
+import lombok.Data;
+
+import java.util.HashMap;
+
+/**
+ *
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
+@Data
+public class ApiMap extends HashMap<String, Api> {
+
+}

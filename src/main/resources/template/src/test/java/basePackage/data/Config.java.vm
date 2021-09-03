@@ -1,0 +1,17 @@
+package ${basePackage}.data;
+
+import lombok.Data;
+
+/**
+ *
+ * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
+ */
+
+@Data
+public class Config {
+
+    private String outputPath;
+    private String mavenGroupId;
+    private String mavenArtifactId;
+
+}

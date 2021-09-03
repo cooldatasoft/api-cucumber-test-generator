@@ -1,5 +1,7 @@
 package ${basePackage}.config;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -10,14 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * DO NOT CHANGE THIS FILE or IT WILL GET OVERRIDDEN
  */
-
+@UtilityClass
 public class Config {
 
-    public static final String CONFIG_PATH = "env/config-%s.properties";
+    private static final String CONFIG_PATH = "env/config-%s.properties";
     private static final Map<String, Properties> CONFIG_MAP = new ConcurrentHashMap<>();
 
-    private Config() {
-    }
 
     public static Properties getConfig() {
         return getConfig("default");

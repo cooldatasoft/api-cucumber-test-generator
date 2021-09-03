@@ -1,0 +1,53 @@
+{
+  "config" : {
+    "outputPath" : "c:/workspace/",
+    "mavenGroupId" : "com.cooldatasoft.testing",
+    "mavenArtifactId" : "sample-api-tests"
+  },
+  "apiMap" : {
+    "Rafal" : {
+      "description" : "Some API",
+      "environments" : [ {
+        "name" : "dev",
+        "protocol" : "http",
+        "host" : "localhost",
+        "port" : 8080
+      } ],
+      "scenarios" : [ {
+        "scenarioNumber" : 1,
+        "groupNames" : [ "scenario"],
+        "requestMethod" : "POST",
+        "contextPath" : "/login",
+        "description" : "Get token",
+        "consumes" : "application/json",
+        "hasRequestBody" : false,
+        "hasResponseBody" : false,
+        "responseStatus" : 200,
+        "ignore" : false
+      }, {
+        "scenarioNumber" : 2,
+        "groupNames" : [ "scenario" ],
+        "requestMethod" : "POST",
+        "contextPath" : "/convert/{from}/{to}",
+        "description" : "Cleanup data - Open transaction",
+        "consumes" : "application/json",
+        "hasRequestBody" : true,
+        "hasResponseBody" : false,
+        "requestFilePath" : "/config/request/Rafal2.json",
+        "responseStatus" : 200,
+        "ignore" : false,
+        "pathParams" : {
+          "from" : "gbp",
+          "to" : "try"
+        },
+        "queryParams" : {
+          "amount": "100"
+        },
+        "headers": {
+          "x-sender": "serviceX"
+        }
+      }
+      ]
+    }
+  }
+}

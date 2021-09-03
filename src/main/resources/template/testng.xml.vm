@@ -3,7 +3,7 @@
 <suite name="Cucumber Framework" parallel="classes" thread-count="1" >
     <test name="Cucumber Tests">
         <classes>
-            <!-- The order is important so changing the order might causes failures -->
+            <!-- The order is important so changing the order might cause failures -->
 
             #foreach($runner in $runners)
             <class name="${runner}"/>

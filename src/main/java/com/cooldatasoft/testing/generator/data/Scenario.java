@@ -2,13 +2,23 @@ package com.cooldatasoft.testing.generator.data;
 
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Data
 public class Scenario {
 
-    private int scenarioNumber;
+
+    /**
+     * Do not use this field as this will be removed in a future version. Instead use List<String> groupNames
+     */
+    @Deprecated
     private String groupName;
+
+
+    private int scenarioNumber;
+    private Set<String> groupNames= new HashSet<>();
     private String requestMethod;
     private String contextPath;
     private String description;

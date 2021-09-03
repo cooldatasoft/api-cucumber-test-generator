@@ -1,47 +1,44 @@
 package com.cooldatasoft.testing.generator;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.cooldatasoft.testing.data.testng.xsd.ClassType;
 import com.cooldatasoft.testing.data.testng.xsd.ObjectFactory;
 import com.cooldatasoft.testing.data.testng.xsd.SuiteType;
 import com.cooldatasoft.testing.generator.data.InputJson;
+import com.cooldatasoft.testing.generator.util.TemplateUtils;
+import com.cooldatasoft.testing.generator.util.TestConfigFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //@Slf4j
 public class Main {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private static final List<String> httpMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH");
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    static {
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.setSerializationInclusion(Include.NON_NULL);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-    }
 
 
     public static void main(String[] args) throws IOException {
@@ -51,12 +48,10 @@ public class Main {
 
     private void start() throws IOException {
 
-        InputJson activeConfig = getTestConfig();
+        InputJson activeConfig = TestConfigFileUtils.getTestConfig();
         String basePackagePath = activeConfig.getConfig().getMavenGroupId().replaceAll("\\.", "/");
         createDirectories(activeConfig, basePackagePath);
-
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/config/test-config.json"), activeConfig);
-
+        TestConfigFileUtils.writeConfigToFile(activeConfig);
 
         VelocityEngine velocityEngine = new VelocityEngine();
         velocityEngine.init();
@@ -73,18 +68,19 @@ public class Main {
             System.out.println(s + "=" + o);
         });
 
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/pom.xml", "src/main/resources/template/pom.xml.vm");
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/.gitignore", "src/main/resources/template/.gitignore.vm");
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/Jenkinsfile", "src/main/resources/template/Jenkinsfile.vm");
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/pom.xml", "src/main/resources/template/pom.xml.vm");
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/.gitignore", "src/main/resources/template/.gitignore.vm");
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/Jenkinsfile", "src/main/resources/template/Jenkinsfile.vm");
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/README.md", "src/main/resources/template/README.md.vm");
 
 
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/logback.xml",
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/logback.xml",
                 "src/main/resources/template/src/test/resources/logback.xml.vm");
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/extent-config.xml",
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/extent-config.xml",
                 "src/main/resources/template/src/test/resources/extent-config.xml.vm");
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/extent.properties",
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/extent.properties",
                 "src/main/resources/template/src/test/resources/extent.properties.vm");
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/cucumber.properties",
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/cucumber.properties",
                 "src/main/resources/template/src/test/resources/cucumber.properties.vm");
 
 
@@ -162,7 +158,7 @@ public class Main {
         } else {
             //first time generation
             velocityContext.put("runners", runnerClassListFromInput);
-            createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/testng.xml",
+            TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/testng.xml",
                     "src/main/resources/template/testng.xml.vm");
         }
         //************** TESTNG.xml end **************
@@ -183,7 +179,7 @@ public class Main {
             try {
                 //Do not override this file if exists
                 if (!new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java").exists()) {
-                    createFile(velocityEngine, velocityContext,
+                    TemplateUtils.createFile(velocityEngine, velocityContext,
                             activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/api/" + WordUtils.capitalize(apiName) + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/ApiStepdefs.java.vm");
                 }
@@ -206,7 +202,7 @@ public class Main {
                         String requestFileContent = "";
                         try {
                             Files.createDirectories(Paths.get(requestFilePath).getParent());
-                            String extension = getFileExtension(consumes);
+                            String extension = TestConfigFileUtils.getFileExtension(consumes);
 
                             Files.write(Paths.get(requestFilePath + extension), requestFileContent.getBytes(), StandardOpenOption.CREATE);
                             if (StringUtils.isEmpty(requestFileContent)) {
@@ -226,7 +222,7 @@ public class Main {
                         String responseFileContent = "";
                         try {
                             Files.createDirectories(Paths.get(responseFilePath).getParent());
-                            String extension = getFileExtension(produces);
+                            String extension = TestConfigFileUtils.getFileExtension(produces);
                             Files.write(Paths.get(responseFilePath + extension), responseFileContent.getBytes(), StandardOpenOption.CREATE);
 
                             if (StringUtils.isEmpty(responseFileContent)) {
@@ -240,7 +236,7 @@ public class Main {
 
                 try {
                     velocityContext.put("scenario", scenario);
-                    createFile(velocityEngine, velocityContext,
+                    TemplateUtils.createFile(velocityEngine, velocityContext,
                             activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/features/" + apiName + scenarioNumber + ".feature",
                             "src/main/resources/template/src/test/resources/features/TestTemplate.feature.vm");
                 } catch (IOException e) {
@@ -249,18 +245,18 @@ public class Main {
 
                 try {
                     velocityContext.put("scenarioNumber", scenarioNumber);
-                    createFile(velocityEngine, velocityContext,
+                    TemplateUtils.createFile(velocityEngine, velocityContext,
                             activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/core/" + apiName.toLowerCase() + scenarioNumber + "/_" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                             "src/main/resources/template/src/test/java/basePackage/stepdefs/core/TopLevelApiStepdefs.java.vm");
 
                     //Do not override this file if exists
                     if (!new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java").exists()) {
-                        createFile(velocityEngine, velocityContext,
+                        TemplateUtils.createFile(velocityEngine, velocityContext,
                                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/" + WordUtils.capitalize(apiName) + scenarioNumber + "Stepdefs.java",
                                 "src/main/resources/template/src/test/java/basePackage/stepdefs/ScenarioStepdefs.java.vm");
                     }
 
-                    createFile(velocityEngine, velocityContext,
+                    TemplateUtils.createFile(velocityEngine, velocityContext,
                             activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/runner/RunCukeIT" + WordUtils.capitalize(apiName) + scenarioNumber + ".java",
                             "src/main/resources/template/src/test/java/basePackage/runner/RunCukeIT.java.vm");
 
@@ -276,7 +272,7 @@ public class Main {
                     contextForEnv.put("apiName", apiName);
                     contextForEnv.put("environment", environment);
 
-                    createFile(velocityEngine, contextForEnv,
+                    TemplateUtils.createFile(velocityEngine, contextForEnv,
                             activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/env/config-" + environment.getName() + ".properties",
                             "src/main/resources/template/src/test/resources/env/config.properties.vm", true);
                 } catch (IOException e) {
@@ -288,183 +284,58 @@ public class Main {
 
 
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/base/BaseStepdefs.java",
                 "src/main/resources/template/src/test/java/basePackage/base/BaseStepdefs.java.vm");
 
-        createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/config/Config.java",
+        TemplateUtils.createFile(velocityEngine, velocityContext, activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/config/Config.java",
                 "src/main/resources/template/src/test/java/basePackage/config/Config.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/Api.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Api.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/ApiMap.java",
                 "src/main/resources/template/src/test/java/basePackage/data/ApiMap.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/Config.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Config.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/Environment.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Environment.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/Pair.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Pair.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/Scenario.java",
                 "src/main/resources/template/src/test/java/basePackage/data/Scenario.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data/InputJson.java",
                 "src/main/resources/template/src/test/java/basePackage/data/InputJson.java.vm");
 
-        createFile(velocityEngine, velocityContext,
+        TemplateUtils.createFile(velocityEngine, velocityContext,
                 activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/util/ObjectStore.java",
                 "src/main/resources/template/src/test/java/basePackage/util/ObjectStore.java.vm");
 
     }
 
-    private String getFileExtension(String mimeType) {
-        String extension="";
-        if(mimeType!=null) {
-            if (mimeType.contains("json")) {
-                extension = ".json";
-            } else if (mimeType.contains("xml")) {
-                extension = ".xml";
-            } else {
-                extension = ".txt";
-            }
-        }
-        return extension;
-    }
+    private void createDirectories(InputJson activeConfig, String basePackagePath) {
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/base").mkdirs();
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/config").mkdirs();
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data").mkdirs();
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/runner").mkdirs();
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/core").mkdirs();
 
-    private void createDirectories(InputJson activeCOnfig, String basePackagePath) {
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/base").mkdirs();
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/config").mkdirs();
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/data").mkdirs();
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/runner").mkdirs();
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/java/" + basePackagePath + "/stepdefs/core").mkdirs();
-
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/resources/features/").mkdirs();
-        new File(activeCOnfig.getConfig().getOutputPath() + activeCOnfig.getConfig().getMavenArtifactId() + "/src/test/resources/config/").mkdirs();
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/features/").mkdirs();
+        new File(activeConfig.getConfig().getOutputPath() + activeConfig.getConfig().getMavenArtifactId() + "/src/test/resources/config/").mkdirs();
         System.out.println("Created directories...");
     }
 
-    private InputJson getTestConfig() throws IOException {
-        String testConfigJsonStr = FileUtils.readFileToString(new File(Constants.INPUT_FILE), "UTF-8");
 
-        InputJson inputJson = objectMapper.readValue(testConfigJsonStr, InputJson.class);
-
-        List<String> errors = new ArrayList<>();
-        //validate
-        inputJson.getApiMap().forEach((apiName, api) -> {
-            if (!apiName.matches("[a-zA-Z0-9]*")) {
-                errors.add("ApiName can only contain letters and number : " + apiName);
-            }
-
-            if (api.getEnvironments().size() < 1) {
-                errors.add("At least 1 envrionemnt should be defined!");
-            }
-
-            api.getEnvironments().forEach(environment -> {
-                if (StringUtils.isBlank(environment.getName())) {
-                    errors.add("Environment name cannot be blank!");
-                }
-
-                if (StringUtils.isBlank(environment.getProtocol())) {
-                    errors.add("Environment protocol cannot be blank!");
-                }
-
-                if (StringUtils.isBlank(environment.getHost())) {
-                    errors.add("Environment host cannot be blank!");
-                }
-
-                if (environment.getPort() < 0) {
-                    errors.add("Environment port should be a valid number! port : " + environment.getPort());
-                }
-            });
-
-            if (api.getScenarios().size() == 0) {
-                errors.add("At least 1 scenario should be defined!");
-            }
-
-            AtomicInteger atomicInteger = new AtomicInteger(1);
-            api.getScenarios().forEach(scenario -> {
-                if (scenario.getScenarioNumber() == 0) {
-                    scenario.setScenarioNumber(atomicInteger.getAndIncrement());
-                }
-
-                if (StringUtils.isBlank(scenario.getRequestMethod())) {
-                    errors.add("Request method cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if (!httpMethods.contains(scenario.getRequestMethod().toUpperCase())) {
-                    errors.add("Request method must be valid! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if (StringUtils.isBlank(scenario.getContextPath())) {
-                    errors.add("ContextPath cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-                if (!scenario.getContextPath().startsWith("/")) {
-                    errors.add("ContextPath must start with '/' - ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if (scenario.getHasResponseBody() && StringUtils.isBlank(scenario.getProduces())) {
-                    errors.add("Scenario produces cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if (scenario.getHasRequestBody() && StringUtils.isBlank(scenario.getConsumes()) && !"GET".equalsIgnoreCase(scenario.getRequestMethod())) {
-                    errors.add("Scenario consumes cannot be blank! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if (scenario.getResponseStatus() < 100 && scenario.getResponseStatus() >= 600) {
-                    errors.add("Response code must be a valid response code! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if ("GET".equalsIgnoreCase(scenario.getRequestMethod()) && scenario.getHasRequestBody()) {
-                    errors.add("GET request should not have a body! ScenarioNumber : " + scenario.getScenarioNumber());
-                }
-
-                if (scenario.getHasRequestBody()) {
-                    scenario.setRequestFilePath("/config/request/"+apiName+scenario.getScenarioNumber()+getFileExtension(scenario.getConsumes()));
-                }
-                if (scenario.getHasResponseBody()) {
-                    scenario.setResponseFilePath("/config/response/"+apiName+scenario.getScenarioNumber()+getFileExtension(scenario.getProduces()));
-                }
-            });
-        });
-
-        if (errors.size() > 0) {
-            errors.forEach(System.err::println);
-            throw new RuntimeException("Invalid input json file! Please correct above issues with the input json!");
-        }
-
-        return inputJson;
-    }
-
-    public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template) throws IOException {
-        createFile(velocityEngine, context, outputFile, template, false);
-    }
-
-    public void createFile(VelocityEngine velocityEngine, VelocityContext context, String outputFile, String template, boolean append) throws IOException {
-
-        File file = new File(outputFile);
-        if (!file.exists()) {
-            file = file.getParentFile();
-            Files.createDirectories(Paths.get(file.getAbsolutePath()));
-        }
-
-
-        Template t = velocityEngine.getTemplate(template);
-        Writer writer = new FileWriter(outputFile, append);
-        t.merge(context, writer);
-        writer.flush();
-        writer.close();
-        System.out.println("Created : " + outputFile);
-    }
 }

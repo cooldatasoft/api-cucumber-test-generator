@@ -5,7 +5,7 @@ import ${basePackage}.stepdefs.api.${capitalizedApiName}Stepdefs;
 /**
  *
  * You can place your custom code inside the methods and it will not get overridden.
- * DO NOT CHANGE THE METHOD SIGNATURE
+ * You should NOT change the method signature
  */
 
 public class ${capitalizedApiName}${scenarioNumber}Stepdefs extends ${capitalizedApiName}Stepdefs {
